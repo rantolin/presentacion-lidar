@@ -26,43 +26,43 @@
     \tableofcontents%[hidesubsections]
 \end{frame}
 
-%%==================================================================S INTRODUCTION
+%%%==================================================================S INTRODUCTION
 \section{\textquestiondown Qué es el LiDAR aéreo?}
-%%==================================================================Sb
-\subsection{Principios}
-%%==================================================================F 
-\begin{frame}
-    \frametitle{Principios del LiDAR aéreo}
-    \begin{enumerate}
-        \item El LiDAR aéreo (Airborne Laser Scanner, \alert<1>{ALS}) es la combinación de:
-	\uncover<1->{
-	\begin{itemize}
-	 \item \alert<1,2>{Escaner Laser}
-	 \item \alert<1,3>{GPS}, que nos da la posición del sensor.
-	 \item \alert<1,3>{IMU}, que nos da nuestra orientación del avión.
-	\end{itemize}
-	}
-	\uncover<2->{
-	\item La posición con respecto al sensor de un punto en tierra se determina por:
-	\begin{itemize}
-	 \item El \alert<2>{tiempo} que tarda cada impulso desde que es emitido hasta que es recibido.
-	 \item El \alert<2>{ángulo} medido desde el nadir en el cual ha sido emitido el rayo.
-	\end{itemize}
-	}
-	\uncover<3>{\item  La posición relativa combinada con la posición global (\alert<3>{GPS}) y la orientación (\alert<3>{IMU}) nos permiten calcular las coordenadas (X,Y,Z) en el punto medido en tierra en un sistema de posicionamiento global (WGS84)}
-    \end{enumerate}
-\end{frame}
-%%==================================================================Sb
-\subsection{Características}
-%%==================================================================F
-\begin{frame}[label=lidar_charact]
-    \frametitle{Características del ALS}
-    \begin{enumerate}[<+->]
-    	\item \alert<1>{Alta precisión} tanto en la componente planimétrica como en la altrimétrica
-    	\item \alert<2>{Alta resolución} debido a la frecuencia de medición.
-    	\item \alert<3>{Monoscópica} y casi \alert{nadiral} $\Rightarrow$ permite observar el terreno incluso en zonas de gran vegetación
-    \end{enumerate}
-\end{frame}
+%%%==================================================================Sb
+%\subsection{Principios}
+%%%==================================================================F 
+%\begin{frame}
+%    \frametitle{Principios del LiDAR aéreo}
+%    \begin{enumerate}
+%        \item El LiDAR aéreo (Airborne Laser Scanner, \alert<1>{ALS}) es la combinación de:
+%	\uncover<1->{
+%	\begin{itemize}
+%	 \item \alert<1,2>{Escaner Laser}
+%	 \item \alert<1,3>{GPS}, que nos da la posición del sensor.
+%	 \item \alert<1,3>{IMU}, que nos da nuestra orientación del avión.
+%	\end{itemize}
+%	}
+%	\uncover<2->{
+%	\item La posición con respecto al sensor de un punto en tierra se determina por:
+%	\begin{itemize}
+%	 \item El \alert<2>{tiempo} que tarda cada impulso desde que es emitido hasta que es recibido.
+%	 \item El \alert<2>{ángulo} medido desde el nadir en el cual ha sido emitido el rayo.
+%	\end{itemize}
+%	}
+%	\uncover<3>{\item  La posición relativa combinada con la posición global (\alert<3>{GPS}) y la orientación (\alert<3>{IMU}) nos permiten calcular las coordenadas (X,Y,Z) en el punto medido en tierra en un sistema de posicionamiento global (WGS84)}
+%    \end{enumerate}
+%\end{frame}
+%%%==================================================================Sb
+%\subsection{Características}
+%%%==================================================================F
+%\begin{frame}[label=lidar_charact]
+%    \frametitle{Características del ALS}
+%    \begin{enumerate}[<+->]
+%    	\item \alert<1>{Alta precisión} tanto en la componente planimétrica como en la altrimétrica
+%    	\item \alert<2>{Alta resolución} debido a la frecuencia de medición.
+%    	\item \alert<3>{Monoscópica} y casi \alert{nadiral} $\Rightarrow$ permite observar el terreno incluso en zonas de gran vegetación
+%    \end{enumerate}
+%\end{frame}
 %%==================================================================Sb
 \subsection{Primer y último impulso}
 %%==================================================================F 
@@ -79,9 +79,9 @@
     \begin{enumerate}[<+->]
         \item Debido a la divergencia del láser, pueden recibirse \alert<1>{más de un eco} para el mismo rayo.
 	\item Los sensores actuales son capaces de medir al menos dos retornos: \alert<2>{primero} y \alert<2>{último}
-	\item Normalmente se producen por: \alert<3>{bordes} de edificios \uncover<4->{o \alert<4>{vegetación}}
+	\item Normalmente se producen por: \alert<3->{bordes} de edificios \uncover<4->{o \alert<4>{vegetación}}
     \end{enumerate}
-   \begin{center}
+    \begin{center}
    	\begin{tikzpicture}
 	\mode<beamer>{
     	  \uncover<3->{\pgftext[bottom,left,at={\pgfpointxy{-2}{0}}]{\pgfuseimage{roof}}}
@@ -92,7 +92,7 @@
     	  \pgftext[bottom,left,at={\pgfpointxy{2}{0}}]{\pgfuseimage{treeg}}
 	}
 	\end{tikzpicture}
-   \end{center}
+    \end{center}
 \end{frame}
 %%==================================================================F 
 \begin{frame}
@@ -121,12 +121,12 @@
 
     \onslide<2->{Clasificación la nube de puntos como:
     \begin{itemize}
- 	\item 0, si el punto pertenece a un \alert<2>{objeto}
- 	\item<3-> 1, si el punto pertenece al \alert<3>{terreno}
+ 	\item 1, si el punto pertenece a un \alert<2>{objeto}
+ 	\item<3-> 0, si el punto pertenece al \alert<3>{terreno}
     \end{itemize}}
 
     \onslide<4>\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Filtrar}}
-     Consiste en \alert<4>{eliminar} los puntos de $V$ con atributo igual 1 (terreno) y dejar los clasificados como 0 (terreno).
+     Consiste en \alert<4>{eliminar} los puntos de $V$ con atributo igual 1 (objeto) y dejar los clasificados como 0 (terreno).
     \end{beamerboxesrounded}
 \end{frame}
 %%==================================================================Sb
@@ -134,29 +134,43 @@
 %%==================================================================F
 \begin{frame}
     \frametitle{Tipos de clasificaciones}
+    \begin{itemize}
+        \item Morfológicos
+        \item Cluster
+        \item Segmentación
+        \item ....
+        \item Estudio de pendientes (splines)
+    \end{itemize}
 \end{frame}
 %%==================================================================Sc
 \section{Clasificación mediante splines}
 %%==================================================================Sb
 \begin{frame}
-    \frametitle{Objetivos y metodología}
+  \frametitle{Objetivos y metodología}
   \begin{enumerate}[<+->]
     \item Objetivo:
-	\begin{itemize}
- 	   \item Generar un MDT, un modelo de vegetación, un modelo de edificios...
-	\end{itemize}
-    \item \textquestiondown Cómo?:
-	\begin{itemize}
- 	  \item Clasificando puntos en diferentes categorías
-	  \item Interpolación de superficies mediante uno ajuste de mínimos cuadrados con norma de Tychonov
-	\end{itemize}
-   \end{enumerate}
+    \begin{itemize}
+       \item Generar un MDT, un modelo de vegetación, un modelo de edificios...
+    \end{itemize}
+    \item ¿Cómo?:
+    \begin{itemize}
+ 	\item Clasificando puntos en diferentes categorías: terreno, objeto y
+            vegetación.
+        \item Interpolación de superficies mediante un ajuste de mínimos
+            cuadrados de splines utilizando una norma de Tychonov
+    \end{itemize}
+  \end{enumerate}
 \end{frame}
 %%==================================================================Sb
 \subsection{Splines}
 %%==================================================================F
 \begin{frame}
     \frametitle{Spline bilineares y bicúbicas}
+    \begin{center}
+        \includegraphics[width=0.45\textwidth]{images/bilinear_spline.jpg}
+        \includegraphics[width=0.45\textwidth]{images/bicubic_spline.jpg}
+        %\includegraphics[width=0.45\textwidth]{images/border_errors.jpg}
+    \end{center}
 \end{frame}
 %%==================================================================Sb
 \subsection{Puntos groseros}
@@ -166,14 +180,39 @@
    \begin{enumerate}
     \item Hay siempre puntos anómalos debido a diferentes eventos:
      \begin{itemize}
- 	\item<2-> \alert<2,5>{Pájaros}
- 	\item<3-> \alert<3,5>{Nubes de agua}
- 	\item<4-> \alert<4,5>{``Multipath''}...
+ 	\item<2-> \alert<2,3,6>{Pájaros}
+ 	\item<4-> \alert<4,6>{Nubes de agua}
+ 	\item<5-> \alert<5,6>{``Multipath''}...
      \end{itemize}
-    \item \only<5>{\alert<5>{\textexclamdown\textexclamdown Deben ser eliminados!!}} \only<6->{La eliminación se hace mediante una interpolacion con spline bicúbicas bastante lisa y baja resolución.}
-    \item<7-> Aquellos puntos que se alejen más de un umbral determinado son considerados como puntos groseros y eliminados.
-    \item<8-> El umbral por defecto son \alert<8>{$50~m$}
+    \item<6>{\alert<6>{\textexclamdown\textexclamdown Deben ser eliminados!!}} 
    \end{enumerate}
+   \begin{picture}(0,100)
+       \uncover<2>{\put(10,10){\includegraphics[height=30mm]{images/angry_birds}}}     
+       \uncover<3,6>{\put(10,10){\includegraphics[height=30mm]{images/bandada}}}
+       \uncover<4>{\put(50,10){\includegraphics[height=30mm]{images/vapor_chimenea}}}
+       \uncover<4,6>{\put(150,10){\includegraphics[height=30mm]{images/fumo}}}
+       \uncover<5,6>{\put(280,10){\includegraphics[height=30mm]{images/multipath}}}
+    \end{picture}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+   \frametitle{Detección de puntos groseros}
+   \begin{itemize}
+    \item<1-> La eliminación se hace mediante una interpolacion con splines 
+        bicúbicas bastante lisa y baja resolución.
+    \item<8-> Aquellos puntos que se alejen más de un umbral determinado son 
+        considerados como puntos groseros y eliminados.
+    \item<9-> El umbral por defecto son \alert<8>{$50~m$}
+   \end{itemize}
+
+    \begin{picture}(0,100)
+       \only<2>{\put(80,0){\includegraphics[height=35mm]{images/obs_splines}}}
+       \only<3,8->{\put(80,0){\includegraphics[height=35mm]{images/3splines}}}
+       \only<4>{\put(80,0){\includegraphics[height=35mm]{images/5splines}}}
+       \only<5>{\put(80,0){\includegraphics[height=35mm]{images/7splines}}}
+       \only<6>{\put(80,0){\includegraphics[height=35mm]{images/9splines}}}
+       \only<7>{\put(80,0){\includegraphics[height=35mm]{images/11splines}}}
+    \end{picture}
 \end{frame}
 %%==================================================================Sb
 \subsection{Detección de bordes}
@@ -181,8 +220,30 @@
 \begin{frame}
   \frametitle{Detección de bordes}
 \begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Borde}}
-     \alt<1>{\alert<1>{NO} es un señor antipático $\Rightarrow$ \alert<1>{NO} es tu jefe}{Es una fuerte variación en altura correspondiente a una pequeña variación en planimetría}
+     \alt<1>{\alert<1>{NO} es un señor antipático $\Rightarrow$ \alert<1>{NO} 
+        es tu jefe}{Es una fuerte variación en altura correspondiente a una 
+        pequeña variación en planimetría}
     \end{beamerboxesrounded}
+
+\only<2>{
+  \begin{picture}(0,100)
+    %\centering
+    \begin{tikzpicture}[scale=0.7]
+    \draw[thick] (-5,0) -- (2.5,0);
+    \filldraw[black!20!white] (-2,0) -- (-2,2) -- (0,3) -- (2,2) -- (2,0) -- cycle;
+    \draw (-2,0) -- (-2,2) -- (0,3) -- (2,2) -- (2,0) -- cycle;
+
+    \coordinate[mark coordinate] (S) at (-2,0);
+    \coordinate[mark coordinate] (B) at (-2,2);
+    \node[anchor=south east] at (S){};
+    \node[anchor=north west] at (B){};
+    \node[anchor=west] at (-1,1){Objeto};
+    \end{tikzpicture}
+  \end{picture}
+  \begin{picture}(0,100)
+     \only<2>{\put(200,-5){\includegraphics[height=30mm]{images/height_edge}}}
+  \end{picture}
+}
 \begin{enumerate}
  \item<3-> El análisis de bordes no es fácil porque los puntos no están distribuidos regularmente
  \item<4-> Se pueden regularizar los puntos $\Rightarrow$ se rasteriza: 
@@ -199,7 +260,8 @@
 \begin{frame}
   \frametitle{Cálculo de bordes}
 \begin{enumerate}
-  \item Se trabaja con una interpolación con spline bilineares que se ajuste mucho a las observaciones (nuestros puntos)
+  \item Se trabaja con una interpolación con spline bilineares que se ajuste 
+    mucho a las observaciones (nuestros puntos)
   \item<2->{Para esta superficie se calcula:}
 \begin{itemize}
  \item<2-> El \alert<2>{Gradiente} para cada punto: $G_m = \sqrt{G_x^2 + G_y^2} = \sqrt{\left( \dfrac{dz}{dx}\right)^2 + \left( \dfrac{dz}{dy}\right)^2}$
@@ -216,15 +278,41 @@
    \item El gradiente tiene un valor muy alto en el borde de los objetos pero también el punto exterior más próximo
    \item Debido al ruido en las observaciones, el valor más alto del gradiente \alert<2>{puede ser el equivocado}
   \end{enumerate}
+    \begin{picture}(0,110)
+        \only<1>{\put(80,0){\includegraphics[height=40mm]{images/gradient_edge}}}
+        \only<2>{\put(80,0){\includegraphics[height=40mm]{images/gradient_noise_edge}}}
+    \end{picture}
 \end{frame}
 %%==================================================================F
 \begin{frame}
   \frametitle{Cálculo de residuos}%
   \begin{enumerate}[<+->]%
-   \item Se trabaja con una interpolación con spline bicúbicas con resolución muy baja para obtener una \alert<1>{superficie muy lisa}%
+   \item Se trabaja con una interpolación con spline bicúbicas con resolución muy baja 
+       para obtener una \alert<1>{superficie muy lisa}%
    \item Se calcula el residuo entre la superficie y las observaciones%
    \item El punto con residuo positivo será nuestro \only<3>{\alert<3>{impertinente}}\only<4>{\alert<4>{borde} ;-) }%
   \end{enumerate}%
+\uncover<3->{
+  \begin{figure}[!b]
+    \centering
+    \begin{tikzpicture}[scale=0.85]
+    %\includegraphics[height=50mm]{images/figure_6}
+    \draw[thick] (-5,0) -- (3,0);
+    \filldraw[black!20!white] (-2,0) -- (-2,2) -- (0,3) -- (2,2) -- (2,0) -- cycle;
+    \draw (-2,0) -- (-2,2) -- (0,3)node[above]{Objeto} -- (2,2) -- (2,0) -- cycle;
+    \draw[thick] (-4.5,0.3)node[above]{Interpolaci\'on} -- 
+        (-3.5,0.3) .. controls (-1.5,.4) and (-1.5,2) .. (0,2);
+
+    \coordinate[mark coordinate] (N) at (-2,0);
+    \coordinate[mark coordinate] (P) at (-2,2);
+    \node[anchor=south east] at (N){--};
+    \node[anchor=north west] at (P){+};
+
+    \node[anchor=west] at (-0.5,1){+ Borde};
+    \node[anchor=west] at (-0.5,0.5){-- \  Terreno};
+    \end{tikzpicture}
+  \end{figure}
+}
 \end{frame}
 %%==================================================================F
 \begin{frame}

@@ -21,6 +21,21 @@
 \usepackage{float}
 \usepackage{listings}
 
+%% CONFIGURACIÓN DE TIKZ
+% Librerías cargadas
+%\usetikzlibrary{calc,fadings,decorations.pathreplacing,arrows,intersections,
+%    decorations.markings,external,shapes}
+
+% Configuración de Tikz y Pgfplot
+\tikzset{%
+    >=stealth, % option for nice arrows
+    inner sep=0pt,%
+    outer sep=3pt,%
+    mark coordinate/.style={inner sep=0pt,outer
+    sep=0pt,minimum size=3pt,
+    fill=black,circle}%
+    }
+
 %% TEMAS BASE
 \usetheme{Boadilla}
 \setbeamertemplate{headline}{
@@ -40,12 +55,12 @@
 %% CONFIGURACIÓN GEENERAL DE HIPERVÍNCULOS
 \hypersetup{%
     baseurl={roberto.antolin@mat.ucm.es},
-    pdftitle={FOSS para trabajar con LiDAR},%
+    pdftitle={Filtro LiDAR. Ejemplo práctico: GRASS},%
     pdfauthor={Roberto Antol\'{i}n S\'anchez},%
     pdfcreator={Roberto Antol\'{i}n S\'anchez},%
     pdfproducer=PDFLaTeX,%
-    pdfsubject={FOSS for LiDAR},%
-    pdfkeywords={FOSS, GFOSS, LiDAR, GRASS, LibLAS, LAStools}%
+    pdfsubject={LiDAR GRASS data filtering},%
+    pdfkeywords={filtros, splines, LiDAR, GRASS}%
   }
 
 \mode<presentation>{\hypersetup{pdfpagemode=FullScreen}}
@@ -119,7 +134,7 @@ commentstyle=\color{fondoO!50!green}\itshape
 
 %% DATOS DEL DOCUMENTO
 \title[FOSS para trabajar con LiDAR]
-      {Software Libre y Abierto para trabajar con datos LiDAR}
+    {Filtro LiDAR. Ejemplo práctico: GRASS}
 
 \author[R. Antolín]
     {Roberto Antolín Sánchez}
@@ -147,6 +162,6 @@ commentstyle=\color{fondoO!50!green}\itshape
 %\includeonlyframes{cc}
 %intro3,intro4,funciona,ventajas1,ventajas2,ventajas3
 %desventajas,miktex,miktex2,editores,otrasherr
-\input{filtro.tex}
-\input{filtrograss.tex}
+\input{filtro}
+%\input{filtrograss}
 \end{document}

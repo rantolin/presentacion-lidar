@@ -1,0 +1,152 @@
+%% PAQUETES
+\usepackage[utf8]{inputenx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{epsfig}
+\usepackage{pdflscape}
+\usepackage{enumerate}
+\usepackage{color}
+\usepackage{beamerfoils}
+\usepackage{beamerprosper}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{pgflibraryshapes}
+\usepackage{wasysym}
+\usepackage{float}
+\usepackage{listings}
+
+%% TEMAS BASE
+\usetheme{Boadilla}
+\setbeamertemplate{headline}{
+\begin{beamercolorbox}{section in head/foot}
+\vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+\end{beamercolorbox}
+\includegraphics[width=\paperwidth]{images/ucm_logo}}
+
+\usecolortheme{lily}
+
+\useinnertheme{circles}
+
+\definecolor{ZurichBlue}{rgb}{.255,.41,.884}
+\setbeamercolor{alerted text}{fg=ZurichBlue}
+\definecolor{Comentario}{rgb}{0.0,0.5,0.0}
+
+%% CONFIGURACIÓN GEENERAL DE HIPERVÍNCULOS
+\hypersetup{%
+    baseurl={roberto.antolin@mat.ucm.es},
+    pdftitle={FOSS para trabajar con LiDAR},%
+    pdfauthor={Roberto Antol\'{i}n S\'anchez},%
+    pdfcreator={Roberto Antol\'{i}n S\'anchez},%
+    pdfproducer=PDFLaTeX,%
+    pdfsubject={FOSS for LiDAR},%
+    pdfkeywords={FOSS, GFOSS, LiDAR, GRASS, LibLAS, LAStools}%
+  }
+
+\mode<presentation>{\hypersetup{pdfpagemode=FullScreen}}
+
+%% COMANDOS
+% Tipos de datos
+\newcommand{\file}[1]{\path{#1}\xspace} %Referencias a ficheros
+\newcommand{\extr}[1]{\emph{#1}\xspace} %Palabras extranjeras
+\mode<article>{\newcommand{\soft}[1]{\textsf{#1}\xspace} }%Referencias a software
+\mode<presentation>{\newcommand{\soft}[1]{\textrm{#1}\xspace} }%Referencias a software
+\newcommand{\sigl}[1]{\textsc{#1}\xspace} %Siglas
+\newcommand{\nota}[1]{\textcolor{nota}{�#1?}\xspace}
+\newcommand{\frametitlee}[1]{\mode<presentation| handout| article:0>{\frametitle{#1}}}
+\newcommand{\figuree}[2]{
+  \mode<article>{
+    \begin{figure}[H]
+    \centering
+    }
+    #1
+    \mode<article>{
+    \caption{#2}
+    \end{figure}
+  }
+}
+
+% Atajos
+\newcommand{\inet}{\extr{Internet}}
+\newcommand{\html}{\sigl{html}}
+\newcommand{\web}{\extr{web}}
+\newcommand{\software}{\extr{software}}
+\newcommand{\hardware}{\extr{hardware}}
+\newcommand{\marca}{\ding{52}}
+
+%% PREFERENCIAS PARA LISTINGS (código)
+\lstset{
+   tabsize=4,%
+   inputencoding=latin1,%
+   extendedchars=true,%
+   basicstyle=\ttfamily\small,%
+   keywordstyle=\bfseries,%
+   commentstyle=\itshape,%
+   breaklines=true,%
+   showstringspaces=false,
+   }
+\lstdefinestyle{latex}
+{
+language={[latex]tex},
+keywordstyle=\color{resalta!50!black},
+commentstyle=\color{fondoO!50!green}\itshape
+}
+
+\lstdefinestyle{SQL}{
+    language=SQL,
+    basicstyle=\ttfamily\footnotesize,%
+    keywordstyle=\color{red}\bfseries,%
+    commentstyle=\color{green!50!black}\itshape,%
+    backgroundcolor=\color{gray!20!white}
+    }
+
+\lstdefinestyle{matlab}{
+  basicstyle=\scriptsize\ttfamily,
+  breaklines=true,
+  commentstyle=\color{Comentario},
+  keywordstyle=\bfseries\color{blue},
+  language=Matlab,
+  %xleftmargin=\parindent,
+  identifierstyle=\bfseries
+}
+
+%\lstset{style=mio}
+
+%% DATOS DEL DOCUMENTO
+\title[FOSS para trabajar con LiDAR]
+      {Software Libre y Abierto para trabajar con datos LiDAR}
+
+\author[R. Antolín]
+    {Roberto Antolín Sánchez}
+
+\institute[UCM]{
+	Sec. Dptal. Astronomía y Geodesia\\
+        Facultad de CC. Matemáticas (UCM)\\
+	Plaza de Ciencias, 3\\
+	Madrid -- 28040\\
+	\texttt{roberto.antolin@mat.ucm.es}\\
+}
+
+%% FECHA DE LA PRESENTACIÓN
+\date[06-05-2013]{6 de Mayo de 2013}
+
+\AtBeginSection[]
+{
+  \begin{frame}[shrink=20]
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection,hidesubsections]
+  \end{frame}
+}
+
+\begin{document}
+%\includeonlyframes{cc}
+%intro3,intro4,funciona,ventajas1,ventajas2,ventajas3
+%desventajas,miktex,miktex2,editores,otrasherr
+\input{filtro.tex}
+\input{filtrograss.tex}
+\end{document}

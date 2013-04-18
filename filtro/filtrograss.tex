@@ -1,0 +1,315 @@
+%================================================================== Logo On/Off
+%\LogoOff
+
+%==================================================================FRONT PAGE AND TOC
+% For article only
+\mode<presentation:0>{\thispagestyle{empty}\maketitle}
+
+% For presentation only
+\mode<presentation| article:0| handout:0>{
+    \begin{frame}<article:0>[label=portada]
+    \titlepage
+    \end{frame}%Fin del frame
+}
+
+% For handout only
+\mode<handout>{
+  \begin{frame}[label=portada]
+    \maketitle
+  \end{frame}
+}
+
+%% TABLE OF CONTENTS
+\begin{frame}[label=toc]
+    \mode<article:0>{\frametitle{Contents}}
+    \mode<presentation>{\small}
+    \tableofcontents%[hidesubsections]
+\end{frame}
+
+%%==================================================================S LOS DATOS
+\section{Los datos}
+%%==================================================================F 
+\begin{frame}
+\frametitle{La nube de puntos}
+Metadatos
+\begin{itemize}
+ \item Sensor LiDAR: \alert{Optech ATLM}
+ \item Datos disponibles: Primer y último impulso.
+ \item Localización: Centro de Stuttgart (estación f.c.)
+ \item Resolución: $0.91$ puntos$/m^2$; 
+ \item Resolución media: $0.87$ puntos$/m^2$
+ \item Numero de puntos: 
+  \begin{enumerate}
+    \item $259030$ de primeros retornos
+    \item $259030$ de últimos retornos
+   \end{enumerate}
+\end{itemize}
+\end{frame}
+%%==================================================================F 
+\pgfdeclareimage[width=0.5\textwidth]{stuttgart}{images/stuttgart}
+\begin{frame}
+\frametitle{Estación f.c. de Stuttgart}
+ \begin{columns}
+  \begin{column}{0.45\textwidth}
+	Coordenadas UTM (MBR):
+	\begin{itemize}
+	 \item Norte = $5403764~m$
+	 \item Sur = $5403188~m$
+	 \item Oeste = $513632~m$
+	 \item Este = $513118~m$
+	\end{itemize}
+   \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{center}
+	\begin{tikzpicture}
+    	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{stuttgart}}
+	\end{tikzpicture}
+	\tiny{\textcopyright 2008 Google -- imágenes}
+    \end{center}
+   \end{column}
+ \end{columns}
+\end{frame}
+%%==================================================================F 
+\pgfdeclareimage[width=0.8\textwidth]{las}{images/las_format}
+\begin{frame}
+\frametitle{Estandard binario \emph{LAS} del ASPRS:}
+\begin{itemize}
+ \item Encabezado público
+ \item Registros de longitud variable
+ \item Puntos: X, Y, Z, Intensidad, clasificación, dirección de la pasada del vuelo,...
+    \begin{center}
+	\begin{tikzpicture}
+    	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{las}}
+	\end{tikzpicture}
+   \end{center}
+ \item Para un conversor \alert{abierto} del estandar \emph{LAS}:
+\beamergotobutton{\url{http://liblas.org/}}
+\end{itemize}
+\end{frame}
+%%==================================================================F 
+\frame[containsverbatim]{%
+\frametitle {Posible formato ASCII}
+\begin{center}
+\begin{verbatim}
+              X          Y       Z
+          513628.82|5403190.04|291.40
+          513628.85|5403191.47|291.24
+          513628.95|5403192.93|294.31
+          513628.99|5403194.45|294.17
+          513628.97|5403196.05|291.26
+          513629.01|5403197.58|291.24
+          513629.05|5403199.10|291.25
+          513629.09|5403200.53|291.26
+                        ...
+\end{verbatim}
+\end{center}
+}
+%%==================================================================S
+\section{Análisis LiDAR en GRASS}
+%%==================================================================Sb
+\begin{frame}
+    \frametitle{Geographic Resources Analysis Support System\hfill \includegraphics[width=0.7cm]{images/grasslogo_transp_big.png}} 
+     \begin{itemize}
+	\item Conocido como \alert<1>{GRASS}: GIS para manipulación y análisis de datos geoespaciales.
+	\item Como es un programa de \alert{códico abierto} con un montón de librerias, es muy adecuado para la implementación de nuestras propias herramientas.
+	\item Escrito en C/C++, lo que permite implementar programas computacionalmente pesados $\Rightarrow$ \alert{ideal} para trabajar con LiDAR.
+	\item GRASS $\geq$ 6 incluye indexación topológica $\Rightarrow$ \alert{fatal} para trabajar con LiDAR.
+	\item Hay versiones para GNU/Linux, MS-Windows, Mac-OSX, SUN, etc. \alert{\textexclamdown\textexclamdown Todos lo pueden utilizar!!}
+	\item Más información en:
+	\beamergotobutton{\url{http://grass.osgeo.ogr}} 
+    \end{itemize}
+\end{frame}
+%%==================================================================Sb
+\subsection{Importando nube de puntos}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Importar como raster: \LARGE\path{r.in.xyz}}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Importar como vectorial: \LARGE\path{v.in.ascii}}
+\end{frame}
+%%==================================================================Sb
+\subsection{Eliminando puntos groseros}
+%%==================================================================F 
+\begin{frame}[fragile,shrink=5]
+ \frametitle{\path{v.outlier}}
+\begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.edgedetection}}\texttt{ input=name output=name outlier=name [soe=value]
+[son=value] [lambda\_i=value] [thres\_o=value]}}
+\begin{itemize}
+ \item \textbf{input}: name of the input vector map
+ \item \textbf{output}: name of the output vector map
+ \item \textbf{soe}: Interpolation spline step value in e-w direction
+ \item \textbf{son}: Interpolation spline step value in n-s direction
+ \item \textbf{lambda\_i}: Thychonov regularization weigth. (default: 0.1)
+ \item \textbf{thres\_o}: Threshold for the outliers. (default: 50)
+\end{itemize}
+\end{beamerboxesrounded}
+\pause
+ \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
+\scriptsize
+%\testcode
+\begin{verbatim}
+GRASS6 (stuttgart): > # Limpiamos el primer impulso
+GRASS6 (stuttgart): > v.outlier in=stuttgart_first out=station_first \
+> outlier=station_first_out soe=10 son=10 thres_o=25
+GRASS6 (stuttgart): > # Limpiamos el ultimo impulso
+GRASS6 (stuttgart): > v.outlier in=stuttgart_last out=station_last \
+> outlier=station_last_out soe=10 son=10 thres_o=30
+\end{verbatim}
+\end{beamerboxesrounded}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Visualización de \LARGE\path{v.outlier}}
+
+\end{frame}
+%%==================================================================Sb
+\subsection{Detección de borde de objetos}
+%%==================================================================F 
+\begin{frame}[fragile,shrink=10]
+ \frametitle{\path{v.lidar.edgedetection}}
+\begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.edgedetection}}\texttt{ input=name output=name first=name see=value sen=value [lambda\_g=value] [tgh=value] [tgl=value] [theta\_g=value] [lambda\_r=value]}}
+\begin{itemize}
+ \item \textbf{input}: name of the input vector map
+ \item \textbf{output}: name of the output vector map
+ \item \textbf{see}: Interpolation spline step value in e-w direction
+ \item \textbf{sen}: Interpolation spline step value in n-s direction
+ \item \textbf{lambda\_g}: Regularization weight in gradient evaluation (default: 0.01)
+ \item \textbf{tgh}: High gradient threshold for edge classification (default: 6)
+ \item \textbf{tgl}: Low gradient threshold for edge classification (default: 3)
+ \item \textbf{theta\_g}: Angle range for same direction detection (default: 0.26)
+ \item \textbf{lambda\_r}: Regularization weight in residual evaluation (default: 2)
+\end{itemize}
+\end{beamerboxesrounded}
+\pause
+ \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
+\scriptsize
+%\testcode
+\begin{verbatim}
+GRASS6 (stuttgart): > v.lidar.edgedetection in=station_last see=4 sen=4 \
+> lambda_g=0.1 out=station_edge
+\end{verbatim}
+\end{beamerboxesrounded}
+\end{frame}
+%%==================================================================F 
+\pgfdeclareimage[width=0.65\textwidth]{edge}{images/edge}
+\begin{frame}
+ \frametitle{Visualización de \LARGE\path{v.lidar.edgedetection}}
+\begin{columns}
+  \begin{column}{0.7\textwidth}
+    \begin{center}
+	\begin{tikzpicture}
+    	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{edge}}
+	\end{tikzpicture}
+   \end{center}
+  \end{column}
+  \begin{column}{0.25\textwidth}
+	\begin{enumerate}
+	 \item \textcolor{red}{Borde}
+	 \item \textcolor{yellow!95!black}{Terreno}
+	\end{enumerate}
+  \end{column}
+\end{columns}
+\end{frame}
+%%==================================================================Sb
+\subsection{Relleno de los límites de los objetos}
+%%==================================================================F 
+\begin{frame}[fragile,shrink=10]
+ \frametitle{\path{v.lidar.growing}}
+\begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.growing}}\texttt{ input=name output=name first=name [tj=value] [td=value]}}
+\begin{itemize}
+ \item \textbf{input}: name of the input vector map
+ \item \textbf{output}: name of the output vector map
+ \item \textbf{first}: name of the input vector map of the first pulse points
+ \item \textbf{tj}: Threshold in planimetric units for considering two measurements as corresponding first and double pulse. (default
+0.2)
+ \item td: Threshold in height units for classifying a point as double pulse. (default: 0.6)
+\end{itemize}
+\end{beamerboxesrounded}
+\pause
+\begin{beamerboxesrounded}[shadow=true]{Sintaxis}
+\scriptsize
+\begin{verbatim}
+GRASS6 (stuttgart): > # Se disminuye primero la resolucion
+GRASS6 (stuttgart): > g.region -p res=2
+GRASS6 (stuttgart): > v.lidar.growing in=station_edge out=station_grow \
+> first=station_first
+\end{verbatim}
+\end{beamerboxesrounded}
+\begin{itemize}
+ \item \alert{Importante!!} Bajar la resolución de la región
+\end{itemize}
+\end{frame}
+%%==================================================================F 
+\pgfdeclareimage[width=0.65\textwidth]{grow}{images/grow}
+\begin{frame}
+ \frametitle{Visualización de \LARGE\path{v.lidar.growing}}
+\begin{columns}
+  \begin{column}{0.65\textwidth}
+    \begin{center}
+	\begin{tikzpicture}
+    	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{grow}}
+	\end{tikzpicture}
+   \end{center}
+  \end{column}
+  \begin{column}{0.35\textwidth}
+	\begin{enumerate}
+	 \item \textcolor{yellow!95!black}{Terreno}
+	 \item \textcolor{green}{Terreno doble eco}
+	 \item \textcolor{blue!90!black}{Objeto doble eco}
+	 \item \textcolor{red}{Objeto}
+	\end{enumerate}
+  \end{column}
+\end{columns}
+\end{frame}
+%%==================================================================Sb
+\subsection{Corrección final}
+%%==================================================================F 
+\begin{frame}[fragile,shrink=5]
+ \frametitle{\path{v.lidar.correction}}
+\begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.correction}}\texttt{ input=name  output=name  terrain=name  sce=value  scn=value  [lambda\_c=value]  [tch=value]  [tcl=value]}}
+\begin{itemize}
+ \item \textbf{input}: name of the input vector map
+ \item \textbf{output}: name of the output vector map
+ \item \textbf{terrain}: name of the terrain output vector map
+ \item \textbf{sce}: Interpolation spline step value in e-w direction
+ \item \textbf{scn}: Interpolation spline step value in n-s direction
+ \item \textbf{lambda\_c}: Regularization weight in reclassification evaluation. (default 1)
+ \item \textbf{tch}: High difference threshold (terrain/object). (default 2)
+ \item \textbf{tcl}: Low differnce threshold (object/terrain). (default 1)
+\end{itemize}
+\end{beamerboxesrounded}
+\pause
+ \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
+\scriptsize
+\begin{verbatim}
+GRASS6 (stuttgart): > v.lidar.correction in=station_grow sce=60 scn=60 \
+> lambda_c=2 tcl=0.1 out=station_corr terrain=station_terr
+\end{verbatim}
+\end{beamerboxesrounded}
+\end{frame}
+%%==================================================================F 
+\pgfdeclareimage[width=0.65\textwidth]{corr}{images/correction}
+\begin{frame}
+ \frametitle{Visualización de \LARGE\path{v.lidar.correction}}
+\begin{columns}
+  \begin{column}{0.65\textwidth}
+    \begin{center}
+	\begin{tikzpicture}
+    	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{corr}}
+	\end{tikzpicture}
+   \end{center}
+  \end{column}
+  \begin{column}{0.35\textwidth}
+	\begin{enumerate}
+	 \item \textcolor{yellow!95!black}{Terreno}
+	 \item \textcolor{green}{Terreno doble eco}
+	 \item \textcolor{blue!90!black}{Objeto doble eco}
+	 \item \textcolor{red}{Objeto}
+	\end{enumerate}
+  \end{column}
+\end{columns}
+\end{frame}
+%%==================================================================Portada
+%\repeatframe{portada}

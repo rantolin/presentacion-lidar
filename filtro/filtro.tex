@@ -290,7 +290,7 @@
    \item Se trabaja con una interpolación con spline bicúbicas con resolución muy baja 
        para obtener una \alert<1>{superficie muy lisa}%
    \item Se calcula el residuo entre la superficie y las observaciones%
-   \item El punto con residuo positivo será nuestro \only<3>{\alert<3>{impertinente}}\only<4>{\alert<4>{borde} ;-) }%
+   \item El punto con residuo positivo será nuestro punto \alert<3>{borde} %
   \end{enumerate}%
 \uncover<3->{
   \begin{figure}[!b]
@@ -342,6 +342,52 @@ El interior del objeto será siempre igual o más alto que los bordes (su altura
 \end{enumerate}
 \end{frame}
 %%==================================================================F
+%\begin{frame}
+%  \frametitle{``Region Growing''}
+%\begin{figure}[t]
+% \begin{center}
+%\tiny
+%  \begin{tikzpicture}[scale=0.2, node distance=1.25cm, auto]
+%    % Region growing
+%    \node[io] (semilla) {Elegir Semilla};
+%    \node[block, below of=semilla] (este) {Moverse a celda Este};
+%    \node[decision, below of=este] (visitadaE) {¿Visitada?};
+%    \node[block, below of=visitadaE, node distance=1cm] (norte) 
+%        {Moverse a celda Norte};
+%    \node[decision, below of=norte] (visitadaN) {¿Visitada?};
+%    \node[block, below of=visitadaN, node distance=1cm] (visitada) 
+%        {Marcar como visitada};
+%    \node[block, right of=visitada, node distance=2cm] (retroceder) {Retroceder};
+%    \node[decision, right of=visitadaE, node distance=1.5cm] (valor1E) 
+%        {¿Valor = 1?};
+%    \node[decision, left of=visitadaN, node distance=1.5cm] (valor1N) 
+%        {¿Valor = 1?};
+%    \node[decision, above of=retroceder] (EsSemilla) {¿Es la semilla?};
+%    \node[io, right of=EsSemilla, node distance=1.5cm] (convhull) 
+%        {Crear soporte compacto};
+%
+%    % Flujo
+%    \path[line] (semilla) -- node{}(este);
+%    \path[line] (este) -- node{}(visitadaE);
+%    \path[line] (visitadaE) -- node{si}(norte);
+%    \path[line] (visitadaE) -- node{no}(valor1E);
+%    \path[line] (valor1E) |- node[near start]{si}(este);
+%    \path[line] (valor1E) |- node[near start]{no}(norte);
+%    \path[line] (norte) -- node{}(visitadaN);
+%    \path[line] (visitadaN) -- node{si}(visitada);
+%    \path[line] (visitadaN) -- node{no}(valor1N);
+%    \path[line] (valor1N) |- node[near start]{si}(este);
+%    \path[line] (valor1N) |- node[near start]{no}(visitada);
+%    \path[line] (visitada) -- node{}(retroceder);
+%    \path[line] (retroceder) -- node{}(EsSemilla);
+%    \path[line] (EsSemilla) -- node[near start]{si}(convhull);
+%    \path[line] (EsSemilla) |- node[near start]{no}(este);
+%    \path[line] (convhull) |- node{}(semilla);
+%  \end{tikzpicture}
+% \end{center}
+%\end{figure}
+%\end{frame}
+%%==================================================================F
 \begin{frame}
   \frametitle{Primera clasificación}
 Los puntos viene clasificados por su posición con respecto al terreno: \pause
@@ -362,45 +408,335 @@ Y por el tipo de impulso:
 %%==================================================================F
 \mode<beamer>{
   \pgfdeclareimage[width=0.4\textwidth]{fumo}{images/fumo}
+  \pgfdeclareimage[width=0.4\textwidth]{fumo}{images/google_techos}
 }
 \begin{frame}
   \frametitle{Errores en la clasificación}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-     \begin{enumerate}
-    	\item<1-> La hipótesis de las alturas falla
-    	\item<2-> Se han identificado bordes pertenecientes al terreno pero no a objetos
+      \begin{enumerate}[<+->]
+    	\item La hipótesis de las alturas falla
+        \item Confusión de alturas
+    	\item Se han identificado bordes pertenecientes al terreno pero no a objetos
      \end{enumerate}
     \end{column}
    \begin{column}{0.45\textwidth}
-    %\only<1>{%
-   \begin{center}
-   	\begin{tikzpicture}
-	\mode<beamer>{
-    	  \pgftext[bottom,left,at={\pgfpointxy{2}{0}}]{\pgfuseimage{fumo}}
-	}
-	\mode<beamer:0>{
-    	  \pgftext[bottom,left,at={\pgfpointxy{2}{0}}]{\pgfuseimage{fumog}}
-	}
-	\end{tikzpicture}
-   \end{center}%
-   %}
+   \begin{figure}[h!]
+   \centering
+      \only<1>{\includegraphics[height=40mm]{images/fumo}}
+      \only<2>{\includegraphics[height=40mm]{images/google_techos}}
+      \only<3>{\includegraphics[height=40mm]{images/terrazas}}
+   \end{figure}
    \end{column}
   \end{columns}
 \end{frame}
 %%==================================================================F
 \begin{frame}
   \frametitle{Corrección final}
-
-Se utilizan los puntos \alert<1>{Terreno único impulso} para realizar una interpolación con splines bilineares y resolucion baja para obtener una superficie bastante lisa
-\begin{enumerate}
- \item<2-> Si un punto terreno está lo suficientemente alejado de la superficie se reclasifica como \alert<2>{objeto}
- \item<3-> Si un punto objeto está lo suficientemente cercano a la superficie se reclasifica como \alert<3>{terreno}
-\end{enumerate}
+Se utilizan los puntos \alert<1>{Terreno único impulso} para realizar una
+interpolación con splines bilineares y resolucion baja para obtener una
+superficie bastante lisa.
+  \begin{minipage}{0.5\textwidth}
+    \begin{enumerate}
+      \item<2-> Si un punto terreno está lo suficientemente alejado de la superficie se reclasifica como \alert<2>{objeto}
+      \item<3-> Si un punto objeto está lo suficientemente cercano a la superficie se reclasifica como \alert<3>{terreno}
+    \end{enumerate}
+  \end{minipage}%
+  ~%
+  \begin{minipage}{0.45\textwidth}
+   \begin{figure}[h!]
+   \centering
+      \uncover<2->{\includegraphics[height=20mm]{images/correct_objeto}}
+      \uncover<3->{\includegraphics[height=20mm]{images/correct_terreno}}
+   \end{figure}
+  \end{minipage}
 \end{frame}
 %%==================================================================Sb
 \subsection{Vegetación}
 %%==================================================================F
 \begin{frame}
- 
+  \frametitle{Motivaciones}
+  \begin{enumerate}[<+->]
+    \item El filtro anterior clasifica entre \alert{terreno} Vs. \alert{objeto}: 
+  \begin{itemize}[<+->]
+    \item Participó en el test del ISPRS: Buenos resultados
+    \item Incompleta: \alert<3>{NO distingue vegetación}
+  \end{itemize}
+    \item Detectar vegetación en una nube ALS es importante para
+      \uncover<4->{\alert{estudios hidrológicos}},
+      \uncover<5->{\alert{modelización urbana},} \uncover<6->{\alert{estudios
+      forestales}, etc\ldots}
+    \item Desarrollo del filtro de vegetación porque:
+    \begin{itemize}[<+->]
+    \item Existe ya una estructura adecuada de datos
+    \item Dado que está bajo licencia libre, su publicación también deberá ser
+      libre
+    \item Completar el algoritmo que participó en el ISPRS
+    \end{itemize}
+\end{enumerate}
 \end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Clasificación de vegetación}
+  \begin{enumerate}
+    \item<1-> Los datos de partida son los clasificados como terreno u objecto
+    (tanto único como doble impulso).
+    \item<2-> Se crea una máscara ráster.
+    \item<3-> Podemos buscar:
+      \begin{enumerate}
+        \item<3-> \alert<3>{Edificios}
+          \begin{itemize}
+            \item valor celda = 1 si al menos un punto ``objeto único impulso''
+              cae en ella.
+            \item valor de celda = 0 en otro caso
+          \end{itemize}
+        \item<4-> \alert<4>{Vegetación}
+          \begin{itemize}
+            \item valor celda = 1 si al menos un punto ``terreno doble impulso''
+              cae en ella.
+            \item valor de celda = 0 en otro caso
+          \end{itemize}
+      \end{enumerate}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Clasificación de vegetación}
+  \begin{enumerate}
+    \item<1-> Se aplica un algoritmo de ``region growing'' a la mascara raster
+        para crear conj. convexos. 
+      \item<2-> Las \alert<2>{dimensiones} y la relación \alert<2>{área/perímetro}
+        se usan para la clasificación de los segmentos:
+    \begin{itemize}
+        \item Objetos pequeños o muy estrechos no son edificios
+        \item Puntos ``terreno doble impulso'' son considerados como vegetación
+        \item Puntos ``objeto doble impulso'' fuera de los segmentos son
+          considerados como vegetación
+        \item El resto siempre es considerado edificio
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Árbol de clasificación del filtro vegetación}
+\begin{figure}[t!]
+\begin{center}
+\scriptsize
+\begin{tikzpicture}[scale=0.75,grow=right, sloped,
+    level 1/.style={sibling distance = 3cm, level distance = 3cm}, 
+    level 2/.style={sibling distance = 1.5cm, level distance = 3cm},
+    level 3/.style={sibling distance = 0.75cm, level distance = 2.5cm},
+    punto/.style={text width=7em, text centered},
+    mascara/.style={text centered, text width=5em},
+    end/.style={circle, minimum width=3pt,fill, inner sep=0pt}]
+  \node {Punto}
+    child{ node[punto] {Terreno único impulso} 
+       child{ node [end, label=right:{\textbf{Terreno}}] {}
+              edge from parent node[above] {\scriptsize{Siempre}}
+       }
+    }
+    child{ node[punto] {Terreno doble impulso}
+       child{ node[mascara] {Máscara Terreno} 
+          child{ node [end, label=right:{\textbf{Terreno}}] {}
+                 edge from parent node[below] {\scriptsize{Fuera}}
+          }
+          child{ node [end, label=right:{\textbf{Vegetación}}] {}
+                 edge from parent node[above] {\scriptsize{Dentro}}
+          }
+       }
+       child{ node[mascara] {Máscara Objeto}
+          child{ node [end, label=right:{\textbf{Vegetación}}] {}
+                 edge from parent node[above] {\scriptsize{Siempre}}
+          }
+       }
+    }
+    child{ node[punto] {Objeto doble y único impulso}
+       child{ node[mascara] {Máscara Terreno} 
+          child{ node [end, label=right:{\textbf{Objeto}}] {}
+                 edge from parent node[below] {\scriptsize{Fuera}}
+          }
+          child{ node [end, label=right:{\textbf{Vegetación}}] {}
+                 edge from parent node[above] {\scriptsize{Dentro}}
+          }
+       }
+       child{ node[mascara] {Máscara Objeto}
+          child{ node [end, label=right:{\textbf{Vegetación}}] {}
+                 edge from parent node[below] {\scriptsize{Fuera}}
+          }
+          child{ node [end, label=right:{\textbf{Objeto}}] {}
+                 edge from parent node[above] {\scriptsize{Dentro}}
+          }
+       }
+    }
+;
+\end{tikzpicture}
+\caption{Árbol de decisión para la clasificación de los puntos en terreno,
+vegetación y edificio.}
+\label{fig:decision_tree}
+\end{center}
+\end{figure}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Clasificación de la vegetación}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[h!]
+      \centering
+      \includegraphics[width=0.95\textwidth]{images/olbia}
+    \end{figure}
+  \end{minipage}
+  \begin{minipage}{0.45\textwidth}
+    \begin{figure}[h!]
+      \centering
+      \includegraphics[width=0.95\textwidth]{images/olbia_veg_build}
+    \end{figure}
+  \end{minipage}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Resultados}
+  \begin{enumerate}[<+->]
+    \item El filtro vegetación está fuertemente afectado por el filtro terreno:
+    \begin{itemize}
+      \item Altos errores del tipo I (error de omisión) debido
+        a bordes de edificios mal clasificados como vegetación.
+      \item Errores de tipo II (error de comisión) debido
+        a zonas de densa vegetación tomada como edificios o incluso zonas
+        terreno clasificadas como objetos.
+    \end{itemize}
+    \item Alrededor del 90\% de los puntos se clasifican correctamente.
+    \begin{itemize}
+      \item Amplias zonas vegetales son correctamente clasificadas, así como la
+        mayoría de árboles individuales. 
+      \item La figura y forma de los eficios está siempre bien definida.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Resultados}
+  \begin{itemize}[<+->]
+    \item Errores de \alert<1>{tipo I} (descartar puntos edificio):
+      \alert<1>{$16.6\%$}
+    \item Errores de \alert<2>{tipo II} (Aceptar puntos vegetación como
+      edificio): \alert<2>{$7.5\%$}
+      \item \alert<3>{Error Total}: \alert<3>{$10.6\%$}
+    \end{itemize} 
+     \begin{table}[b!]
+    \centering
+    \begin{tabular}{lccccr}
+      \multicolumn{6}{c}{\bfseries{Matriz de Confusión}} \\
+      \hline
+      \textbf{Clasif.} & \multicolumn{2}{c}{Edificios} & 
+        \multicolumn{2}{c}{Vegetación} & Total \\
+      \cline{2-6}
+      \textbf{Verdad} & \multicolumn{2}{c}{Puntos (\%)} & 
+        \multicolumn{2}{c}{Puntos (\%)} & Total \\
+      \hline
+      Edif. & \multicolumn{2}{c}{179678 (83.4)} & 
+        \multicolumn{2}{c}{34919 (\alert<1>{16.6})} & 214597 \\
+      Veg. & \multicolumn{2}{c}{37590 (\alert<2>{7.5})} & 
+        \multicolumn{2}{c}{388709 (92.5)} & 426299 \\
+      Total & \multicolumn{2}{c}{217268 (--)} & 
+      \multicolumn{2}{c}{423628 (--)} & 640896\footnote{Las estadísticas están referidas a aquellos puntos con una pre-clasificación distinta de terreno único impulso} \\
+      \hline
+    \end{tabular}
+    \end{table}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Solapes}
+  \begin{enumerate}
+    \item<1-> Durante las interpolaciones, se divide toda la región en teselas
+      solapadas
+      \begin{itemize}
+        \item<1-> Permite la computación de la interpolación de modo más rápido
+        \item<2-> Elimina los problemas de alocación de memoria
+      \end{itemize}
+    \item<3-> En las zonas de solape
+    \begin{itemize}
+        \item<3-> Asegura la continuidad de toda la interpolación
+        \item<4-> Introduce una discontinuidad en la primera derivada: Errores en el
+          mapa de aspectos en zonas con ausencia de datos
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Solapes}
+    \begin{figure}[h!]
+      \centering
+      \only<1>{\includegraphics[width=0.65\textwidth]{images/errores_aspect}}
+      \only<2>{\includegraphics[width=0.65\textwidth]{images/errores_aspect_mascara}}
+      \only<3>{\includegraphics[width=0.65\textwidth]{images/error_interpolacion_solapes}}
+    \end{figure}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Computación}
+    \begin{table}[h!]
+      \centering
+    \begin{tabular}{ccrrr}
+    \toprule
+    \multicolumn{5}{c}{\bfseries Interpolación Bilinear} \\
+    \hline
+    \bfseries Paso de Spline & \bfseries Número de teselas & \bfseries
+    tradicional & \bfseries teselado & \bfseries gain \\ 
+    % (m) & (NSxEW) & (time) & (time) & \\
+    \hline\hline
+    1 & 16x16 & 2h16m42s & 1h33m47s & 31,4\% \\ 
+    2 & 8x8 & 32m33s & 22m18s & 31,5\% \\ 
+    4 & 4x4 & 8m03s & 6m10s & 23,4\%\\ 
+    8 & 2x2 & 2m18s & 2m30s & -8,7\% \\
+    16 & 1x1 & 1m01s & 1m41s & -65,6\% \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Solapes}
+    \begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=0.50]
+  \filldraw[fill=gray!40!white]   
+    (4,0) -- (4,5) -- (9,5) -- (9,0) -- cycle;
+  \draw (0,0) -- (0,5) -- (5,5) -- (5,0) -- cycle;
+  \draw
+    (0,4) node[anchor=north west] {Tesela 3} -- 
+    (0,9) node[anchor=north west] {Tesela 1} -- 
+    (5,9) node[anchor=north west] {Tesela 2} -- 
+    (5,4) node[anchor=north west] {Tesela 4} -- cycle;
+  \draw (4,4) -- (4,9) -- (9,9) -- (9,4) -- cycle;
+  \draw
+    (0,5) -- (4,5) -- node[below=.1cm] {1} 
+    (5,5) -- node[below=0.1cm] {2} 
+    (8,5) -- node[below=0.1cm] {3} (9,5); 
+  \draw
+    (0,1) -- (4,1) -- node[below=.1cm] {7} 
+    (5,1) -- node[below=.1cm] {8} 
+    (8,1) -- node[below=.1cm] {9} (9,1); 
+  \draw
+    (0,4) -- (4,4) -- node[below=.75cm] {4} 
+    (5,4) -- node[below=.75cm] {5} 
+    (8,4) -- node[below=.75cm] {6} (9,4); 
+  \draw (4,0) -- (4,9); 
+  \draw (8,0) -- (8,9); 
+    % Continuacion de teselas en lineas de puntos
+  \draw[thick] (4,0) -- (4,5) -- (9,5) -- (9,0) -- cycle;
+  \draw[dotted,thick] (9,0) -- (10,0);
+  \draw[dotted,thick] (9,1) -- (10,1);
+  \draw[dotted,thick] (9,4) -- (10,4);
+  \draw[dotted,thick] (9,5) -- (10,5);
+  \draw[dotted,thick] (9,9) -- (10,9);
+  \draw[dotted,thick] (0,-1) -- (0,0);
+  \draw[dotted,thick] (4,-1) -- (4,0);
+  \draw[dotted,thick] (5,-1) -- (5,0);
+  \draw[dotted,thick] (8,-1) -- (8,0);
+  \draw[dotted,thick] (9,-1) -- (9,0);
+    \end{tikzpicture}
+    \end{figure}
+\end{frame}
+%%==================================================================F
+
+

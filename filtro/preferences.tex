@@ -23,6 +23,7 @@
 
 %% CONFIGURACIÓN DE TIKZ
 % Librerías cargadas
+\usetikzlibrary{arrows}
 %\usetikzlibrary{calc,fadings,decorations.pathreplacing,arrows,intersections,
 %    decorations.markings,external,shapes}
 
@@ -35,6 +36,22 @@
     sep=0pt,minimum size=3pt,
     fill=black,circle}%
     }
+
+% Librerías de tiKz
+    %\usetikzlibrary{}
+
+    % Define block styles
+\tikzstyle{io} = [trapezium,trapezium left angle=70,trapezium right angle=-70,
+  minimum height=0.9cm, draw, fill=blue!20, text width=4.5em, 
+  text badly centered, node distance=2cm, inner sep=0pt]
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, text width=5.5em, 
+  text badly centered, node distance=2cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, text width=5em, 
+  text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=2cm, 
+    minimum height=2em]
+
 
 %% TEMAS BASE
 \usetheme{Boadilla}

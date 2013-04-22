@@ -67,7 +67,7 @@ Metadatos
  \end{columns}
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.8\textwidth]{las}{images/las_format}
+\pgfdeclareimage[width=0.7\textwidth]{las}{images/las_format}
 \begin{frame}
 \frametitle{Estandard binario \emph{LAS} del ASPRS:}
 \begin{itemize}
@@ -79,7 +79,7 @@ Metadatos
     	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{las}}
 	\end{tikzpicture}
    \end{center}
- \item Para un conversor \alert{abierto} del estandar \emph{LAS}:
+ \item Para un conversor \alert{abierto} del estándar \emph{LAS}:
 \beamergotobutton{\url{http://liblas.org/}}
 \end{itemize}
 \end{frame}
@@ -119,12 +119,44 @@ Metadatos
 %%==================================================================Sb
 \subsection{Importando nube de puntos}
 %%==================================================================F 
-\begin{frame}
+\begin{frame}[fragile,shrink=5]
  \frametitle{Importar como raster: \LARGE\path{r.in.xyz}}
+\begin{verbatim}
+GRASS6 (stuttgart): > # Primero conocemos la extensión del archivo
+GRASS6 (stuttgart): > r.in.xyz -sg in=
+GRASS6 (stuttgart): > # Fijo la región con la que trabajar
+GRASS6 (stuttgart): > g.region n= s= e= w=
+GRASS6 (stuttgart): > # Genero una visualización de las pasadas
+GRASS6 (stuttgart): > # considerando para cada celda el número de puntos
+GRASS6 (stuttgart): > r.in.xyz in= out=pasadas method=n fs='|'
+\end{verbatim}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Solape de pasadas: \LARGE\path{r.in.xyz}}
+\begin{verbatim}
+GRASS6 (stuttgart): > # Genero un raster con la información LiDAR
+GRASS6 (stuttgart): > r.in.xyz in= out=stuttgart fs='|'
+\end{verbatim}
 \end{frame}
 %%==================================================================F 
 \begin{frame}
  \frametitle{Importar como vectorial: \LARGE\path{v.in.ascii}}
+\begin{verbatim}
+GRASS6 (stuttgart): > # Genero dos vectoriales con la información LiDAR
+GRASS6 (stuttgart): > # de último y primer impulso
+GRASS6 (stuttgart): > v.in.ascii -tbzr in= out=stuttgart_first fs='|' z=3
+GRASS6 (stuttgart): > v.in.ascii -tbzr in= out=stuttgart_last fs='|' z=3
+\end{verbatim}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Importar como .LAS: \LARGE\path{v.in.las}}
+\begin{verbatim}
+GRASS6 (stuttgart): > v.in.lidar -p input=
+GRASS6 (stuttgart): > v.in.lidar -i input="Serpent Mound Model LAS Data.las" location=
+GRASS6 (stuttgart): > v.in.lidar -tb input="Serpent Mound Model LAS Data.las" output=
+\end{verbatim}
 \end{frame}
 %%==================================================================Sb
 \subsection{Eliminando puntos groseros}
@@ -190,7 +222,7 @@ GRASS6 (stuttgart): > v.lidar.edgedetection in=station_last see=4 sen=4 \
 \end{beamerboxesrounded}
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.65\textwidth]{edge}{images/edge}
+\pgfdeclareimage[width=0.55\textwidth]{edge}{images/edge}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.edgedetection}}
 \begin{columns}
@@ -239,7 +271,7 @@ GRASS6 (stuttgart): > v.lidar.growing in=station_edge out=station_grow \
 \end{itemize}
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.65\textwidth]{grow}{images/grow}
+\pgfdeclareimage[width=0.55\textwidth]{grow}{images/grow}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.growing}}
 \begin{columns}
@@ -287,7 +319,7 @@ GRASS6 (stuttgart): > v.lidar.correction in=station_grow sce=60 scn=60 \
 \end{beamerboxesrounded}
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.65\textwidth]{corr}{images/correction}
+\pgfdeclareimage[width=0.55\textwidth]{corr}{images/correction}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.correction}}
 \begin{columns}

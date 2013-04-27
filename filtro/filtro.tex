@@ -136,11 +136,174 @@
     \frametitle{Tipos de clasificaciones}
     \begin{itemize}
         \item Morfológicos
-        \item Cluster
-        \item Segmentación
-        \item ....
+        \item Densificación progresiva
+        \item Segmentación y \emph{clustering}
+        \item Basado en superficies
         \item Estudio de pendientes (splines)
     \end{itemize}
+\end{frame}
+%%==================================================================Sb
+\section{Comparación de filtros}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Comparación de filtros}
+    \begin{itemize}
+      \item Estudio del rendimiento de los 8 filtros distintos 
+      \item Auspiciado por el \emph{International Society of Photogrammetry and
+        Remote Sensing} (\alert{ISPRS})
+      \item Estudio cualitativo y cuantitativo
+    \end{itemize}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Resultados}
+  \begin{enumerate}
+    \item Todos los filtros funcionan correctamente con escenarios poco exigentes
+      \begin{itemize}
+        \item Poca o nula pendiente, y extensas zonas de terreno
+        \item Pequeños edificios
+        \item Vegetación dispersa
+      \end{itemize}
+    \item Mayores problemas en zonas con:
+      \begin{itemize}
+        \item Edificios voluminosos con escasa extensión de terreno
+        \item Parches de terreno a diferentes alturas o con alturas variables
+      \end{itemize}
+    \item<2-> Mejores prestaciones: \alert<2>{densificación progresiva} y los basados
+      en la \alert<2>{determinación de superficies}
+    \item<3-> Los más desarrollados: \alert<3>{segmentación y clustering}
+    \item<4-> \alert<4>{Combinación} de varios algoritmos e \emph{inputs} distintos
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Automatización Vs Manual}
+  \begin{enumerate}
+    \item Comparados con la fotogrametría, los filtros son procesos \alert{automáticos}
+    \item Todavía no se ha encontrado un filtro completamente automático y
+      \alert{universal}
+    \item \alert{Necesaria} una revisión manual
+      \begin{itemize}
+        \item Zonas urbanas 
+        \item \alert{Innecesaria en zonas rurales}
+        \item Puentes y pasos elevados
+        \item Algoritmos basados en relaciones geométricas de puntos vecinos
+        \item El terreno no puede ser identificado por escasez de puntos
+        %\item El trabajo depende de las características de la superficie
+      \end{itemize}
+    \item Fuentes de datos adicionales pueden disminuir la revisión
+      \begin{itemize}
+        \item Delimitación de edificios
+        \item Contexto de terreno local
+        \item Información radiométrica: \alert{externa} o la \alert{devuelta por
+          el láser}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Densidad puntual}
+  \begin{itemize}
+    \item La influencia de la densidad depende fuertemente de la topografía
+    \item Se necesita una densidad mínima para asegurar cierta penetración en
+      zonas vegetales
+    \item En zonas complejas es además importante para asegurar la
+      representación de calidad de los detalles del escenario
+    \item Incluso con alta densidad, los filtros presentan problemas de
+      clasificación
+    \item Según disminuye la densidad los resultados empobrece rápidamente
+  \end{itemize}
+\end{frame}
+%%==================================================================Sc
+\section{Generación de Modelos Digitales del Terreno}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Modelos Digitales del Terreno (MDT)}
+  \begin{beamerboxesrounded}[shadow=true]{Definición}
+    Teóricamente sería una representación continua, $f$, del terreno en un
+    cierto área local. Dadas las coordenadas planimétricas de un punto,
+    $\mathbf{p}=(x,y)$, y su valor altimétrico asociado, $z$, la representación 2.5D del terreno, sería: $z=f(x,y)$
+  \end{beamerboxesrounded}
+
+  \begin{enumerate}
+    \item  a
+      \begin{itemize}
+        \item  a
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{A}
+  \begin{enumerate}
+    \item A
+      \begin{itemize}
+        \item  A
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================Sc
+\subsection{Reducción de los datos}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Densidad puntual}
+  \begin{enumerate}
+    \item \alert{Todavía} es importante una reducción de la densidad
+      puntual\alert{!}
+    \item Escaneo: $100$ KHz $\Rightarrow$ \alert{$\approx$ 10
+      pts/$\mathrm{m}^2$} $\Rightarrow$ Alta resolución en el DTM
+    \item Problemas de almacenamiento y procesado
+    \item Necesaria una reducción de la densidad
+    \item Métodos
+      \begin{itemize}
+        \item Cambio de la estructura del DTM
+        \item Sin cambio de la estructura del DTM
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Remuestreo}
+  \begin{enumerate}
+    \item Métodos estándar en el procesado de imágenes digitales
+    \item Menor resolución con celdas más grandes
+    \item El valor del píxel nuevo se deriva de las celdas originales
+    \item<2-> \alert<2>{Ventajas}
+      \begin{itemize}
+        \item Aplicable también para mallas
+        \item Muy rápido y mantiene la estructura
+      \end{itemize}
+    \item<3-> \alert<3->{Desventajas}
+      \begin{itemize}
+        \item No son adaptativos: presentan problemas con diferencia de alturas
+         \begin{itemize}
+           \item<4-> Raster adaptativos locales\only<5>{: \alert{poco usados}}
+         \end{itemize}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{TIN's}
+  \begin{enumerate}
+    \item \alert<1-3>{Purga de puntos}
+      \begin{itemize}
+        \item<2-> Considera el TIN completo 
+        \item<3-> elimina puntos paso a paso
+      \end{itemize}
+    \item \alert<4-5>{Aproximación por subdivisión}
+      \begin{itemize}
+        \item<4-> Empieza con un TIN aproximado
+        \item<5-> Utiliza algoritmos \alert<5>{divide y vencerás} hasta alcanzar cierto
+          criterio
+      \end{itemize}
+    \item<6-> Necesitan teselar el TIN 
+    \item<7-> Poco eficaces \alert<7>{justo después} del filtrado
+      \begin{itemize}
+        \item Errores en las observaciones y en zonas de solape (poco eficaces)
+        \item Interpolación suavizada de alta resolución de los puntos
+      \end{itemize}
+  \end{enumerate}
 \end{frame}
 %%==================================================================Sc
 \section{Clasificación mediante splines}
@@ -148,16 +311,17 @@
 \begin{frame}
   \frametitle{Objetivos y metodología}
   \begin{enumerate}[<+->]
-    \item Objetivo:
+    \item Objetivo
     \begin{itemize}
-       \item Generar un MDT, un modelo de vegetación, un modelo de edificios...
+       \item Generar un MDT, un modelo de \alert<2>{vegetación}, un modelo de
+         \alert<2>{edificios}...
     \end{itemize}
-    \item ¿Cómo?:
+    \item ¿Cómo?
     \begin{itemize}
- 	\item Clasificando puntos en diferentes categorías: terreno, objeto y
-            vegetación.
-        \item Interpolación de superficies mediante un ajuste de mínimos
+      \item Interpolación de \alert<4>{superficies} mediante un ajuste de mínimos
             cuadrados de splines utilizando una norma de Tychonov
+          \item Estudio de pendientes: \alert<5>{Morfología}
+          \item \alert<6>{Segmentación} de objetos
     \end{itemize}
   \end{enumerate}
 \end{frame}
@@ -241,7 +405,7 @@
     \end{tikzpicture}
   \end{picture}
   \begin{picture}(0,100)
-     \only<2>{\put(200,-5){\includegraphics[height=30mm]{images/height_edge}}}
+     \uncover<2>{\put(200,-5){\includegraphics[height=30mm]{images/height_edge}}}
   \end{picture}
 }
 \begin{enumerate}

@@ -4,6 +4,8 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
+\usepackage{amsfonts}   
+\usepackage{pifont}     % Para tickYes y tickNo
 \usepackage{graphicx}
 \usepackage{epsfig}
 \usepackage{pdflscape}
@@ -109,7 +111,8 @@
 \newcommand{\web}{\extr{web}}
 \newcommand{\software}{\extr{software}}
 \newcommand{\hardware}{\extr{hardware}}
-\newcommand{\marca}{\ding{52}}
+\newcommand{\tickNo}{\color{red}\ding{55}}
+\newcommand{\tickYes}{\color{green!50!black}\checkmark}
 
 %% PREFERENCIAS PARA LISTINGS (código)
 \lstset{

@@ -215,7 +215,7 @@
   \end{itemize}
 \end{frame}
 %%==================================================================Sc
-\section{Generación de Modelos Digitales del Terreno}
+\section[DTM]{Generación de Modelos Digitales del Terreno}
 %%==================================================================F
 \begin{frame}
   \frametitle{Modelos Digitales del Terreno (DTM)}
@@ -234,12 +234,103 @@
 \end{frame}
 %%==================================================================F
 \begin{frame}
-  \frametitle{A}
+  \frametitle{Calidad de los DTM}
   \begin{enumerate}
-    \item A
+    \item<1-> \alert<1>{Calidad de los datos}
+      \begin{itemize}
+        \item Describe la calidad de los datos de entrada
+      \end{itemize}
+    \item<2-> \alert<2>{Calidad del modelo}
+      \begin{itemize}
+        \item Describe la calidad del modelo final generado
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad de los datos}
+  \begin{enumerate}
+    \item Capa de densidad de puntos
+      \begin{itemize}
+        \item Permite identificar zonas con escasez de datos
+        \item Ofrece información sobre las posibles interpolaciones y
+          extrapolaciones
+      \end{itemize}
+    \item Capa de distancia entre puntos
+      \begin{itemize}
+        \item Parecida al mapa de densidad
+        \item Permite conocer zona con pocos puntos
+        \item Da información sobre la distancia del vecino más próximo
+      \end{itemize}
+    \item Fuentes de datos
+      \begin{itemize}
+        \item Da información sobre la presencia de distintos tipos de inputs:
+          ALS, TLS, fotogrametría, etc\ldots
+      \end{itemize}
+    \item Mapa de precisión de las fuentes de datos
+      \begin{itemize}
+        \item Da información sobre la mejor o peor precisión de los datos
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad de los datos}
+  \begin{enumerate}
+    \item Información sobre la consistencia de los datos
+      \begin{itemize}
+        \item Visualización de la huella de las pasadas
+        \item Visualización de la diferencia entre pasadas
+      \end{itemize}
+    \item Capa de distancia entre puntos
+      \begin{itemize}
+        \item Permite conocer zona con pocos puntos
+        \item Da información sobre la distancia del vecino más próximo
+      \end{itemize}
+    \item Fuentes de datos
+      \begin{itemize}
+        \item Da información sobre la presencia de distintos tipos de inputs:
+          ALS, TLS, fotogrametría, etc\ldots
+      \end{itemize}
+    \item Mapa de precisión de las fuentes de datos
+      \begin{itemize}
+        \item Da información sobre la mejor o peor precisión de los datos
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad de los datos}
+  \only<1,2>{Pasadas
+    \begin{center}
+      \only<1>{\includegraphics[width=0.55\textwidth]{images/pasadas}}
+      \only<2>{\includegraphics[width=0.55\textwidth]{images/pasadas_shademap}}
+    \end{center}
+  }
+  \only<3>{Mapa de densidades
+    \begin{center}
+      \includegraphics[width=0.45\textwidth]{images/densidad}
+    \end{center}
+  }
+
+  \only<4>{Densidad de pasadas
+    \begin{center}
+      \includegraphics[width=0.45\textwidth]{images/densidad_pasadas}
+    \end{center}
+  }
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad del modelo}
+  \begin{enumerate}
+    \item Calidad del modelo
       \begin{itemize}
         \item  A
       \end{itemize}
+      \[\sigma_z[\mathrm{cm}] = \pm\left(\dfrac{6}{\sqrt{n}} + 30\tan(\alpha)\right)\]
+    \item $n$: densidad puntual (pts/m$^2$)
+    \item $\tan(\alpha)$: inclinación del terreno
+
   \end{enumerate}
 \end{frame}
 %%==================================================================Sc

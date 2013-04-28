@@ -27,7 +27,7 @@
 \end{frame}
 
 %%%==================================================================S INTRODUCTION
-\section{\textquestiondown Qué es el LiDAR aéreo?}
+\section[ALS]{\textquestiondown Qué es el LiDAR aéreo?}
 %%%==================================================================Sb
 %\subsection{Principios}
 %%%==================================================================F 
@@ -109,8 +109,8 @@
     \end{enumerate}
 \end{frame}
 %%==================================================================S
-\section{Filtros ALS}
-%%==================================================================Sb
+\section[Filtros]{Filtros ALS}
+%%==================================================================Sc
 \subsection{Definición}
 %%==================================================================F
 \begin{frame}[label=filter_def]
@@ -143,7 +143,7 @@
     \end{itemize}
 \end{frame}
 %%==================================================================Sb
-\section{Comparación de filtros}
+\subsection{Comparación de filtros}
 %%==================================================================F
 \begin{frame}
   \frametitle{Comparación de filtros}
@@ -182,7 +182,8 @@
     \item Comparados con la fotogrametría, los filtros son procesos \alert{automáticos}
     \item Todavía no se ha encontrado un filtro completamente automático y
       \alert{universal}
-    \item \alert{Necesaria} una revisión manual
+    \item \alert{Necesaria} una revisión y edición manual (cercados,
+      umbrales\ldots)
       \begin{itemize}
         \item Zonas urbanas 
         \item \alert{Innecesaria en zonas rurales}
@@ -222,16 +223,224 @@
   \begin{beamerboxesrounded}[shadow=true]{Definición}
     Teóricamente sería una representación continua, $f$, del terreno en un
     cierto área local. Dadas las coordenadas planimétricas de un punto,
-    $\mathbf{p}=(x,y)$, y su valor altimétrico asociado, $z$, la representación 2.5D del terreno, sería: $z=f(x,y)$
+    $\mathbf{p}=(x,y)$, y su valor altimétrico asociado, $z$, la representación
+    \alert<1>{2.5D} del terreno, sería: $z=f(x,y)$
   \end{beamerboxesrounded}
-
-  \begin{enumerate}
-    \item  a
+  \begin{itemize}
+    \item<2-> \alert<2>{2.5D $\ne$ 3D}
       \begin{itemize}
-        \item  a
+        \item<3-> $z_1 = \mathbf{p}(x,y)$; $z_2 = \mathbf{p}(x,y)$ \alert<3>{¡!}
+        \item<4-> Puentes y pasos elevados $\Rightarrow$ \alert<4>{No se consideran}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Tipos de Modelos digitales}
+  \begin{minipage}{.4\textwidth}
+  \begin{enumerate}[<+->]
+    \item Realidad
+    \item Modelo Digital de Superficie (DSM)
+    \item Modelo de Edificios (DBM)
+    \item Modelo Digital del Terreno (DTM)
+  \end{enumerate}
+  \end{minipage}
+  \begin{minipage}{.55\textwidth}
+    \uncover<1->{\includegraphics[height=0.20\textheight]{images/realidad}}
+    \uncover<2->{\includegraphics[height=0.20\textheight]{images/dsm}}
+    \uncover<3->{\includegraphics[height=0.20\textheight]{images/dbm}}
+    \uncover<4->{\includegraphics[height=0.20\textheight]{images/dtm}}
+  \end{minipage}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{DTM Vs. DSM}
+  \begin{enumerate}
+    \item \alert{DTM}
+    \begin{itemize}
+      \item Se busca un suavizado de la superficie
+      \item Se utilizan los últimos ecos para filtrar
+    \end{itemize}
+    \item \alert{DSM}
+    \begin{itemize}
+      \item Se busca resaltar los detalles
+      \item Se utilizan los primeros impulsos
+      \item Errores en observaciones groseras $\Rightarrow$ \alert{Limpiar}
+      \item Objetos temporales (coches, gruas\ldots) $\Rightarrow$ \alert{Limpiar}
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{nDSM}
+    \begin{itemize}
+      \item \alert{nDSM = DSM - DSM}
+    \end{itemize}
+    \begin{center}
+      \includegraphics[width=0.30\textwidth]{images/n_dsm}~--~
+      \includegraphics[width=0.30\textwidth]{images/n_dtm}~$\Rightarrow$~
+      \includegraphics[width=0.30\textwidth]{images/n_ndsm}~
+    \end{center}
+\end{frame}
+%%==================================================================Sb
+\subsection[Ráster]{Estructuras regulares}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Continuo Vs. Discreto}
+  \begin{enumerate}
+    \item Interesa almacenar la representación del DTM una vez conocida
+    \item Opción: definición de la funcion $z = f(x,y)$ + el área
+      \begin{itemize}
+        \item[\tickYes] Realmente continuo
+        \item[\tickNo] No siempre es conocida
+        \item[\tickNo] No es algo estándar
+      \end{itemize}
+    \item Discretización en un intervalos regulares
+      \begin{itemize}
+        \item[\tickNo] No es continuo
+        \item[\tickYes] Fácilmente almacenable
+        \item[\tickYes] Existen multitud de formatos ``estándar''
       \end{itemize}
   \end{enumerate}
 \end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Raster Vs. Mallado}
+  \begin{enumerate}
+    \item<1-> \alert{Ráster} 
+      \begin{itemize}
+        \item Cada celda representa la altura de todo el área que cubre la celda
+      \end{itemize}
+    \item<2-> Malla
+      \begin{itemize}
+        \item Representa la información de altura en puntos regularmente ordenados
+        \item Cada altura es la evaluación de $f$ en cada punto $(x,y)$ de la
+          malla
+        \item Interpolación, aproximación (inverso de la distancia pesada),
+          mínimos cuadrados móviles, kriging, etc,\ldots
+      \end{itemize}
+        \item<3-> Son uno el dual del otro
+    \item<4-> Se suelen confundir
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Raster Vs. Mallado}
+  \begin{itemize}
+    \item Ráster 
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/raster}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Raster Vs. Mallado}
+  \begin{itemize}
+    \item Malla 
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/mallado}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Raster Vs. Mallado}
+  \begin{itemize}
+    \item Malla híbrida 
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/malla_breaklines}
+  \end{center}
+\end{frame}
+%%==================================================================Sb
+\subsection{TIN}
+%%==================================================================F
+\begin{frame}
+  \frametitle{TIN}
+  \begin{enumerate}
+    \item \alert{TIN}: \emph{Triangulated irregular network}
+    \item Los puntos topológicamente vecinos deben guardar unas reglas
+      geométricas: \alert{Triangulación de Delaunay}
+    \item Permiten también modelos híbridos con líneas de ruptura
+    \item Formatos estándares
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{TIN}
+  \begin{itemize}
+    \item Triangulación
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/triangulacion}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{TIN}
+  \begin{itemize}
+    \item \alert{NO} este TIN :-)
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/estano}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{TIN}
+  \begin{itemize}
+    \item TIN
+  \end{itemize}
+  \begin{center}
+        \includegraphics[height=0.60\textheight]{images/tin_dem}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Triangulación de Delaunay}
+  \begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Triangulación de
+    Delaunay}}
+    Sea $P$ un conjunto de puntos en el \alert{plano}, se dice que $T$ es una
+    \alert{\emph{Triangulación de Delaunay}} $\Leftrightarrow$ cualquier círculo que
+    circunscriba cualquier triángulo de $T$ no encierra ningún otro punto de $P$
+    \end{beamerboxesrounded}
+  \begin{enumerate}
+    \item La mejor aproximación posible genera triángulos regulares
+    \item En cualquier caso: maximiza el menor ángulo de cada triángulo
+  \begin{center}
+        \includegraphics[height=0.15\textwidth]{images/triang_regular}
+  \end{center}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Triangulación de Delaunay}
+  \begin{beamerboxesrounded}[shadow=true]{Propiedad 1}
+    Sea $P$ un conjunto de puntos en el plano, entonces tres puntos $p_i, p_j$ y
+    $p_k$ son vértices del mismo triángulo de la triangulación de Delaunay de $P
+    \Leftrightarrow$ la circunferencia que pasa por los tres puntos no encierra
+    ningún punto de $P$
+  \end{beamerboxesrounded}
+  \begin{center}
+  \includegraphics[height=0.20\textwidth]{images/propiedad1}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Triangulación de Delaunay}
+  \begin{beamerboxesrounded}[shadow=true]{Propiedad 2}
+    Sea $P$ un conjunto de puntos en el plano, entonces, dos puntos, $p_i$ y
+    $p_j$ forman un segmento de la triangulación de Delaunay de $P
+    \Leftrightarrow$ existe una circunferencia que contiene a ambos pero no
+    encierra ningún punto de $P$
+  \end{beamerboxesrounded}
+  \begin{center}
+  \includegraphics[height=0.20\textwidth]{images/propiedad2}
+  \end{center}
+\end{frame}
+%%==================================================================Sb
+\subsection[Calidad]{Calidad de los DTM}
 %%==================================================================F
 \begin{frame}
   \frametitle{Calidad de los DTM}
@@ -276,31 +485,6 @@
 %%==================================================================F
 \begin{frame}
   \frametitle{Calidad de los datos}
-  \begin{enumerate}
-    \item Información sobre la consistencia de los datos
-      \begin{itemize}
-        \item Visualización de la huella de las pasadas
-        \item Visualización de la diferencia entre pasadas
-      \end{itemize}
-    \item Capa de distancia entre puntos
-      \begin{itemize}
-        \item Permite conocer zona con pocos puntos
-        \item Da información sobre la distancia del vecino más próximo
-      \end{itemize}
-    \item Fuentes de datos
-      \begin{itemize}
-        \item Da información sobre la presencia de distintos tipos de inputs:
-          ALS, TLS, fotogrametría, etc\ldots
-      \end{itemize}
-    \item Mapa de precisión de las fuentes de datos
-      \begin{itemize}
-        \item Da información sobre la mejor o peor precisión de los datos
-      \end{itemize}
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Calidad de los datos}
   \only<1,2>{Pasadas
     \begin{center}
       \only<1>{\includegraphics[width=0.55\textwidth]{images/pasadas}}
@@ -321,16 +505,69 @@
 \end{frame}
 %%==================================================================F
 \begin{frame}
+  \frametitle{Calidad de los datos}
+  \begin{enumerate}
+    \item<1-> Información sobre la consistencia de los datos
+    \item<2-> ¿La calidad del filtro? (terreno vs. no-terreno)
+      \begin{itemize}
+        \item Introducen errores en zonas complejas
+        \item No hay un modo preciso de calcular la calidad de la clasificación
+        \item Suelen estar basado en la \emph{\alert{experiencia práctica}}
+      \end{itemize}
+    \item<3-> Vegetación baja
+      \begin{itemize}
+        \item Dificil decir si un eco pertenece al terreno
+        \item Introducen un \alert{sesgo sistemático} en altura
+        \item Se necesitan información adicional
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
   \frametitle{Calidad del modelo}
   \begin{enumerate}
-    \item Calidad del modelo
+    \item<1-> Calidad \alert<1>{interior}
       \begin{itemize}
-        \item  A
+        \item Es la calidad del modelo respecto a las \alert<1>{propios datos}
       \end{itemize}
-      \[\sigma_z[\mathrm{cm}] = \pm\left(\dfrac{6}{\sqrt{n}} + 30\tan(\alpha)\right)\]
-    \item $n$: densidad puntual (pts/m$^2$)
-    \item $\tan(\alpha)$: inclinación del terreno
-
+    \item<2-> Calidad \alert<2>{exterior}
+      \begin{itemize}
+        \item Es la calidad del modelo respecto a \alert<1>{puntos de control
+          externos (GCP)}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad interior}
+  \begin{enumerate}
+    \item<1-> Es la calidad del modelo respecto a las propios datos
+    \item<2-> Se aplica la ley propagación de los errores
+    \item<2-> \alert<2>{RMSE} (raíz del error cuadrático medio)
+      \[ \mathrm{RMSE(\widehat\theta)}=\sqrt{\mathrm{E}\left[(\widehat\theta - \theta)^2\right]}\]
+    \item<3-> Representa la precisión del proceso de generación del DTM 
+    \item<3-> Ayuda a identificar áreas con diferencias significativas entre
+      modelo y datos
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Calidad exterior}
+  \begin{enumerate}
+    \item<1-> Es la calidad del modelo respecto a puntos de control externos (GCP)
+      \begin{itemize}
+        \item Los GCP no tienen que usarse durante la generación del DTM
+        \item Tienen que ser mucho más precisos que los datos de input
+      \end{itemize}
+    \item<2-> Describe tanto los inputs como el proceso del modelado
+    \item<2-> Generalmente se utiliza \alert<2>{RMSE}
+    \item<3-> Estimación en \alert{altura} [Karel y Kraus (2006)]
+        \[\sigma_z[\mathrm{cm}] = \pm\left(\dfrac{6}{\sqrt{n}} +
+        30\tan(\alpha)\right)\]
+      \begin{itemize}
+        \item $n$: densidad puntual (pts/m$^2$)
+        \item $\tan(\alpha)$: inclinación del terreno
+      \end{itemize}
   \end{enumerate}
 \end{frame}
 %%==================================================================Sc
@@ -722,13 +959,13 @@ superficie bastante lisa.
       \uncover<5->{\alert{modelización urbana},} \uncover<6->{\alert{estudios
       forestales}, etc\ldots}
     \item Desarrollo del filtro de vegetación porque:
-    \begin{itemize}[<+->]
-    \item Existe ya una estructura adecuada de datos
-    \item Dado que está bajo licencia libre, su publicación también deberá ser
+    \begin{itemize}
+    \item<7-> Existe ya una estructura adecuada de datos
+    \item<7-> Dado que está bajo licencia libre, su publicación también deberá ser
       libre
-    \item Completar el algoritmo que participó en el ISPRS
+    \item<7-> Completar el algoritmo que participó en el ISPRS
     \end{itemize}
-\end{enumerate}
+  \end{enumerate}
 \end{frame}
 %%==================================================================F
 \begin{frame}
@@ -927,27 +1164,27 @@ vegetación y edificio.}
     \end{figure}
 \end{frame}
 %%==================================================================F
-\begin{frame}
-  \frametitle{Computación}
-    \begin{table}[h!]
-      \centering
-    \begin{tabular}{ccrrr}
-    \toprule
-    \multicolumn{5}{c}{\bfseries Interpolación Bilinear} \\
-    \hline
-    \bfseries Paso de Spline & \bfseries Número de teselas & \bfseries
-    tradicional & \bfseries teselado & \bfseries gain \\ 
-    % (m) & (NSxEW) & (time) & (time) & \\
-    \hline\hline
-    1 & 16x16 & 2h16m42s & 1h33m47s & 31,4\% \\ 
-    2 & 8x8 & 32m33s & 22m18s & 31,5\% \\ 
-    4 & 4x4 & 8m03s & 6m10s & 23,4\%\\ 
-    8 & 2x2 & 2m18s & 2m30s & -8,7\% \\
-    16 & 1x1 & 1m01s & 1m41s & -65,6\% \\
-    \bottomrule
-    \end{tabular}
-    \end{table}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Computación}
+%    \begin{table}[h!]
+%      \centering
+%    \begin{tabular}{ccrrr}
+%    \toprule
+%    \multicolumn{5}{c}{\bfseries Interpolación Bilinear} \\
+%    \hline
+%    \bfseries Paso de Spline & \bfseries Número de teselas & \bfseries
+%    tradicional & \bfseries teselado & \bfseries gain \\ 
+%    % (m) & (NSxEW) & (time) & (time) & \\
+%    \hline\hline
+%    1 & 16x16 & 2h16m42s & 1h33m47s & 31,4\% \\ 
+%    2 & 8x8 & 32m33s & 22m18s & 31,5\% \\ 
+%    4 & 4x4 & 8m03s & 6m10s & 23,4\%\\ 
+%    8 & 2x2 & 2m18s & 2m30s & -8,7\% \\
+%    16 & 1x1 & 1m01s & 1m41s & -65,6\% \\
+%    \bottomrule
+%    \end{tabular}
+%    \end{table}
+%\end{frame}
 %%==================================================================F
 \begin{frame}
   \frametitle{Solapes}
@@ -993,5 +1230,3 @@ vegetación y edificio.}
     \end{figure}
 \end{frame}
 %%==================================================================F
-
-

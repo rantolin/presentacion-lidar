@@ -132,7 +132,7 @@ GRASS6 (stuttgart): > r.in.xyz in= out=pasadas method=n fs='|'
 \end{verbatim}
 \end{frame}
 %%==================================================================F 
-\begin{frame}
+\begin{frame}[fragile]
  \frametitle{Solape de pasadas: \LARGE\path{r.in.xyz}}
 \begin{verbatim}
 GRASS6 (stuttgart): > # Genero un raster con la información LiDAR
@@ -140,7 +140,7 @@ GRASS6 (stuttgart): > r.in.xyz in= out=stuttgart fs='|'
 \end{verbatim}
 \end{frame}
 %%==================================================================F 
-\begin{frame}
+\begin{frame}[fragile]
  \frametitle{Importar como vectorial: \LARGE\path{v.in.ascii}}
 \begin{verbatim}
 GRASS6 (stuttgart): > # Genero dos vectoriales con la información LiDAR
@@ -150,7 +150,7 @@ GRASS6 (stuttgart): > v.in.ascii -tbzr in= out=stuttgart_last fs='|' z=3
 \end{verbatim}
 \end{frame}
 %%==================================================================F 
-\begin{frame}
+\begin{frame}[fragile]
  \frametitle{Importar como .LAS: \LARGE\path{v.in.las}}
 \begin{verbatim}
 GRASS6 (stuttgart): > v.in.lidar -p input=

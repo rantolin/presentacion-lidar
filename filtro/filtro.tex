@@ -110,37 +110,165 @@
 \end{frame}
 %%==================================================================S
 \section[Filtros]{Filtros ALS}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros}
+  \begin{enumerate}
+    \item Es necesario extraer información de la nube de puntos: terreno,
+      no-terreno.
+    \item Paso imprescindible para la generación de DTM
+    \item Clasificación en diferentes categorías:
+      \begin{itemize}
+        \item Terreno
+        \item Edificio
+        \item Vegetación
+        \item Pasos elevados, etc\ldots
+      \end{itemize}
+    \item Las idea subyacente son también aplicables otras técnicas como TLS,
+      pero con características diferentes (densidad).
+  \end{enumerate}
+\end{frame}
 %%==================================================================Sc
 \subsection{Definición}
 %%==================================================================F
 \begin{frame}[label=filter_def]
     \frametitle{Filtros ALS}
-    \onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Nube de puntos LiDAR}}
-     Es un conjunto de puntos tridimensionales con un atributo asociado: $V = \left\lbrace v=\left(x,a\right) | x \in \mathbb{R}^3, a \in \mathbb{N} \right\rbrace$
+    %\onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Nube de puntos LiDAR}}
+    % Es un conjunto de puntos tridimensionales con un atributo asociado: 
+    % $V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) | x \in \mathbb{R}^3, c \in \mathbb{N} \right\rbrace$
+    %\end{beamerboxesrounded}
+    \onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Clasificación}}
+      Dada una nube de puntos,$V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) 
+      \left| x \in \mathbb{R}^3, c \in \mathbb{N} \right. \right\rbrace $, se 
+      puede definir como \alert{\emph{clasificación}} a la función $f: \mathbf{x} \to c$ 
+      que a cada punto tridimensional, $\mathbf{x}$, le asigna su atributo, $c$.
     \end{beamerboxesrounded}
 
-    \onslide<2->{Clasificación la nube de puntos como:
+    \onslide<2->{El problema formal de clasificar se restringe a encontrar la
+      función $f$ tal que asigna:
     \begin{itemize}
- 	\item 1, si el punto pertenece a un \alert<2>{objeto}
- 	\item<3-> 0, si el punto pertenece al \alert<3>{terreno}
+      \item \alert<2>{1}, si el punto pertenece a un \alert<2>{objeto}
+      \item<3-> \alert<3>{0}, si el punto pertenece al \alert<3>{terreno}
     \end{itemize}}
 
     \onslide<4>\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Filtrar}}
      Consiste en \alert<4>{eliminar} los puntos de $V$ con atributo igual 1 (objeto) y dejar los clasificados como 0 (terreno).
     \end{beamerboxesrounded}
 \end{frame}
-%%==================================================================Sb
-\subsection{Tipos de filtros/clasificaciones}
 %%==================================================================F
 \begin{frame}
     \frametitle{Tipos de clasificaciones}
-    \begin{itemize}
+    \begin{enumerate}
         \item Morfológicos
         \item Densificación progresiva
-        \item Segmentación y \emph{clustering}
         \item Basado en superficies
+        \item Segmentación y \emph{clustering}
         \item Estudio de pendientes (splines)
-    \end{itemize}
+    \end{enumerate}
+\end{frame}
+%%==================================================================Sb
+\subsection{Morfológicos}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos}
+  \begin{enumerate}
+    \item<1-> \alert{Morfología}: Conjunto de métodos del análisis de imágenes que
+      dan una descripción cuantitativa de estructuras geométricas.
+    \item<2-> Existen dos operadores básicos: \alert{Erosión} y \alert{dilatación}.
+    \item<2-> Ayudan a simplicar la estructura de una superficie basándose en un
+      cierto elemento.
+    \item<3-> Combinaciones de ambos:
+      \begin{itemize}
+        \item<3-> \alert{apertura}\uncover<5->{: erosión $\to$ dilatación}
+        \item<3-> \alert{clausura}\uncover<5->{: dilatación $\to$ erosión}
+        \only<4>{\item \alert{Y NO, NO ES FÚTBOL, CARAJO!}}
+        \item<6-> Ayudan a determina el máximo y el mínimo basándose en un cierto elemento.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{images/morfologia}
+  \end{center}
+\end{frame}
+%%==================================================================Sb
+\subsection{Densificación progresiva}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de densificación progresiva}
+  \begin{enumerate}
+    \item Triangulación progresiva de un TIN 
+    \item Empiezan con un pequeño subconjunto de puntos de la nube: pre-clasificación del terreno
+    \item Incrementan de manera iterativa la cantidad de información para
+      clasificar todo la nube paso a paso.
+    \item Para incrementar siguen varios criterios: ángulos y altura respecto a
+      los triángulos del TIN
+      \begin{itemize}
+        \item Hansen y Vögtle (1999)
+        \item Axelsson (2000)
+        \item Sohn y Dowman (2002)
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================Sb
+\subsection{Superficies}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros basados en superficies}
+  \begin{enumerate}
+    \item Utilizan una reconstrucción de superficies de referencia
+    \item Similares a la densificación progresiva
+    \item Asumen que todos los puntos de la superficie pertenecen al terreno 
+    \item Progresivamente eliminan puntos que no se ajustan al modelo de tereno
+  \end{enumerate}
+  \begin{center}
+    \includegraphics[height=0.40\textheight]{images/surfbased_filter}
+  \end{center}
+\end{frame}
+%%==================================================================F
+%\begin{frame}
+%  \frametitle{Filtros basados en superficies}
+%  \begin{center}
+%    \includegraphics[height=0.50\textheight]{images/surfbase_filter}
+%  \end{center}
+%\end{frame}
+%%==================================================================Sb
+\subsection{Segmentación}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{enumerate}
+    \item Clasifican \alert{segmentos} enteros de puntos: conjuntos de puntos
+      vecinos con propiedades similares
+    \item Intentan evitar el problema de puntos individuales mal clasificados
+    \item Hay dos pasos básicos
+      \begin{itemize}
+        \item Generar por agregación segmentos de puntos
+        \item Clasificar dichos segmentos
+      \end{itemize}
+    \item Se pueden elegir varios algoritmos para cada paso
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{enumerate}
+    \item<1-> Se utilizan técnicas de \alert{crecimiento de regiones}
+    \item<1-> Se agrupan puntos vecinos con propiedades similares dentro de un
+      umbral: altura, vector normal, etc,\ldots
+    \item<2-> La segmentación se puede hacer en el espacio objeto:
+      \alert{segmentación}
+    \item<3-> o en el espacio de las características: \alert{\emph{clustering}}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{images/clustering}
+  \end{center}
 \end{frame}
 %%==================================================================Sb
 \subsection{Comparación de filtros}
@@ -212,7 +340,7 @@
       representación de calidad de los detalles del escenario
     \item Incluso con alta densidad, los filtros presentan problemas de
       clasificación
-    \item Según disminuye la densidad los resultados empobrece rápidamente
+    \item Según disminuye la densidad los resultados empobrecen rápidamente
   \end{itemize}
 \end{frame}
 %%==================================================================Sc

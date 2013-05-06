@@ -33,7 +33,7 @@ Metadatos
  \item Sensor LiDAR: \alert{Optech ATLM}
  \item Datos disponibles: Primer y último impulso.
  \item Localización: Centro de Stuttgart (estación f.c.)
- \item Resolución: $0.91$ puntos$/m^2$; 
+ \item Resolución: $0.91$ puntos$/m^2$ 
  \item Resolución media: $0.87$ puntos$/m^2$
  \item Numero de puntos: 
   \begin{enumerate}
@@ -43,7 +43,7 @@ Metadatos
 \end{itemize}
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.5\textwidth]{stuttgart}{images/stuttgart}
+\pgfdeclareimage[width=0.5\textwidth]{stuttgart}{images/stuttgart_google}
 \begin{frame}
 \frametitle{Estación f.c. de Stuttgart}
  \begin{columns}
@@ -84,8 +84,15 @@ Metadatos
 \end{itemize}
 \end{frame}
 %%==================================================================F 
+\defverbatim[colored]\head{
+\begin{lstlisting}[style=shell]
+  $ # Formato ASCII de los datos
+  $ head csite4
+\end{lstlisting}
+}
 \frame[containsverbatim]{%
 \frametitle {Posible formato ASCII}
+\head
 \begin{center}
 \begin{verbatim}
               X          Y       Z
@@ -105,63 +112,96 @@ Metadatos
 \section{Análisis LiDAR en GRASS}
 %%==================================================================Sb
 \begin{frame}
-    \frametitle{Geographic Resources Analysis Support System\hfill \includegraphics[width=0.7cm]{images/grasslogo_transp_big.png}} 
-     \begin{itemize}
-	\item Conocido como \alert<1>{GRASS}: GIS para manipulación y análisis de datos geoespaciales.
-	\item Como es un programa de \alert{códico abierto} con un montón de librerias, es muy adecuado para la implementación de nuestras propias herramientas.
-	\item Escrito en C/C++, lo que permite implementar programas computacionalmente pesados $\Rightarrow$ \alert{ideal} para trabajar con LiDAR.
-	\item GRASS $\geq$ 6 incluye indexación topológica $\Rightarrow$ \alert{fatal} para trabajar con LiDAR.
-	\item Hay versiones para GNU/Linux, MS-Windows, Mac-OSX, SUN, etc. \alert{\textexclamdown\textexclamdown Todos lo pueden utilizar!!}
-	\item Más información en:
-	\beamergotobutton{\url{http://grass.osgeo.ogr}} 
-    \end{itemize}
+ \frametitle{Geographic Resources Analysis Support System\hfill 
+   \includegraphics[width=0.7cm]{images/grasslogo_transp_big.png}} 
+ \begin{itemize}
+    \item Conocido como \alert<1>{GRASS}: GIS para manipulación y 
+      análisis de datos geoespaciales.
+    \item Como es un programa de \alert{códico abierto} con un 
+      montón de librerias, es muy adecuado para la implementación 
+      de nuestras propias herramientas.
+    \item Escrito en C/C++, lo que permite implementar programas 
+      computacionalmente pesados $\Rightarrow$ \alert{ideal} 
+      para trabajar con LiDAR.
+    \item GRASS $\geq$ 6 incluye indexación topológica $\Rightarrow$ 
+      \alert{fatal} para trabajar con LiDAR.
+    \item Hay versiones para GNU/Linux, MS-Windows, Mac-OSX, SUN, etc. 
+      \alert{\textexclamdown\textexclamdown Todos lo pueden utilizar!!}
+    \item Más información en: \beamergotobutton{\url{http://grass.osgeo.ogr}} 
+  \end{itemize}
 \end{frame}
 %%==================================================================Sb
 \subsection{Importando nube de puntos}
 %%==================================================================F 
-\begin{frame}[fragile,shrink=5]
+\defverbatim[colored]\extension{
+\begin{lstlisting}[style=shell]
+GRASS6: > # Primero conocemos la extension del archivo
+GRASS6: > r.in.xyz -sg in=csite4
+GRASS6: > # Fijo la region con la que trabajar
+GRASS6: > g.region n= s= e= w=
+GRASS6: > # Genero una visualizacion de las pasadas
+GRASS6: > # considerando para cada celda el numero de puntos
+GRASS6: > r.in.xyz in=csite4 out=pasadas method=n fs='|'
+\end{lstlisting}
+}
+\begin{frame}
  \frametitle{Importar como raster: \LARGE\path{r.in.xyz}}
-\begin{verbatim}
-GRASS6 (stuttgart): > # Primero conocemos la extensión del archivo
-GRASS6 (stuttgart): > r.in.xyz -sg in=
-GRASS6 (stuttgart): > # Fijo la región con la que trabajar
-GRASS6 (stuttgart): > g.region n= s= e= w=
-GRASS6 (stuttgart): > # Genero una visualización de las pasadas
-GRASS6 (stuttgart): > # considerando para cada celda el número de puntos
-GRASS6 (stuttgart): > r.in.xyz in= out=pasadas method=n fs='|'
-\end{verbatim}
+ \extension
 \end{frame}
 %%==================================================================F 
-\begin{frame}[fragile]
+\defverbatim[colored]\xyz{
+\begin{lstlisting}[style=shell]
+# Generar un raster con la informacion LiDAR
+r.in.xyz in=csite4 out=stuttgart fs='|' x=1 y=2 z=3
+\end{lstlisting}
+}
+\begin{frame}
  \frametitle{Solape de pasadas: \LARGE\path{r.in.xyz}}
-\begin{verbatim}
-GRASS6 (stuttgart): > # Genero un raster con la información LiDAR
-GRASS6 (stuttgart): > r.in.xyz in= out=stuttgart fs='|'
-\end{verbatim}
+ \xyz
 \end{frame}
 %%==================================================================F 
-\begin{frame}[fragile]
+\defverbatim[colored]\vascii{
+\begin{lstlisting}[style=shell]
+# Generar dos vectoriales con la informacion LiDAR
+# de ultimo y primer impulso
+v.in.ascii -tbzr in=csite4 out=stuttgart_first fs='|' x=1 y=2 z=3
+v.in.ascii -tbzr in=csite4 out=stuttgart_last fs='|' x=4 y=5 z=6
+\end{lstlisting}
+}
+\begin{frame}
  \frametitle{Importar como vectorial: \LARGE\path{v.in.ascii}}
-\begin{verbatim}
-GRASS6 (stuttgart): > # Genero dos vectoriales con la información LiDAR
-GRASS6 (stuttgart): > # de último y primer impulso
-GRASS6 (stuttgart): > v.in.ascii -tbzr in= out=stuttgart_first fs='|' z=3
-GRASS6 (stuttgart): > v.in.ascii -tbzr in= out=stuttgart_last fs='|' z=3
-\end{verbatim}
+ \vascii
 \end{frame}
 %%==================================================================F 
-\begin{frame}[fragile]
+\defverbatim[colored]\vlidar{
+\begin{lstlisting}[style=shell]
+# Mostrar la informacion del LAS
+v.in.lidar -p input=csite4.las
+# Crear una nueva ``localizacion'' con la informacion del LAS
+v.in.lidar -i input="Serpent Mound Model LAS Data.las" location=Stuttgart
+# Cerrar y abrir GRASS en la nueva localizacion
+# Importar el archivo LAS sin topologia ni tabla asociada
+v.in.lidar -tb input="Serpent Mound Model LAS Data.las" output=
+\end{lstlisting}
+}
+\begin{frame}
  \frametitle{Importar como .LAS: \LARGE\path{v.in.las}}
-\begin{verbatim}
-GRASS6 (stuttgart): > v.in.lidar -p input=
-GRASS6 (stuttgart): > v.in.lidar -i input="Serpent Mound Model LAS Data.las" location=
-GRASS6 (stuttgart): > v.in.lidar -tb input="Serpent Mound Model LAS Data.las" output=
-\end{verbatim}
+ \vlidar
 \end{frame}
 %%==================================================================Sb
 \subsection{Eliminando puntos groseros}
 %%==================================================================F 
-\begin{frame}[fragile,shrink=5]
+\defverbatim[colored]\voutlier{
+\begin{lstlisting}[style=shell]
+# Limpiamos el primer impulso
+v.outlier in=stuttgart_first out=station_first \
+> outlier=station_first_out soe=10 son=10 thres_o=25
+# Limpiamos el ultimo impulso
+v.outlier in=stuttgart_last out=station_last \
+> outlier=station_last_out soe=10 son=10 thres_o=30
+\end{lstlisting}
+}
+\begin{frame}[shrink=05]
  \frametitle{\path{v.outlier}}
 \begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.edgedetection}}\texttt{ input=name output=name outlier=name [soe=value]
 [son=value] [lambda\_i=value] [thres\_o=value]}}
@@ -174,29 +214,23 @@ GRASS6 (stuttgart): > v.in.lidar -tb input="Serpent Mound Model LAS Data.las" ou
  \item \textbf{thres\_o}: Threshold for the outliers. (default: 50)
 \end{itemize}
 \end{beamerboxesrounded}
-\pause
- \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
-\scriptsize
-%\testcode
-\begin{verbatim}
-GRASS6 (stuttgart): > # Limpiamos el primer impulso
-GRASS6 (stuttgart): > v.outlier in=stuttgart_first out=station_first \
-> outlier=station_first_out soe=10 son=10 thres_o=25
-GRASS6 (stuttgart): > # Limpiamos el ultimo impulso
-GRASS6 (stuttgart): > v.outlier in=stuttgart_last out=station_last \
-> outlier=station_last_out soe=10 son=10 thres_o=30
-\end{verbatim}
-\end{beamerboxesrounded}
+\voutlier
 \end{frame}
 %%==================================================================F 
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.outlier}}
-
 \end{frame}
 %%==================================================================Sb
 \subsection{Detección de borde de objetos}
 %%==================================================================F 
-\begin{frame}[fragile,shrink=10]
+\defverbatim[colored]\vedge{
+\begin{lstlisting}[style=shell]
+# Deteccion de bordes
+v.lidar.edgedetection in=station_last see=4 sen=4 lambda_g=0.1 \
+> out=station_edge
+\end{lstlisting}
+}
+\begin{frame}[shrink=02]
  \frametitle{\path{v.lidar.edgedetection}}
 \begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.edgedetection}}\texttt{ input=name output=name first=name see=value sen=value [lambda\_g=value] [tgh=value] [tgl=value] [theta\_g=value] [lambda\_r=value]}}
 \begin{itemize}
@@ -211,15 +245,7 @@ GRASS6 (stuttgart): > v.outlier in=stuttgart_last out=station_last \
  \item \textbf{lambda\_r}: Regularization weight in residual evaluation (default: 2)
 \end{itemize}
 \end{beamerboxesrounded}
-\pause
- \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
-\scriptsize
-%\testcode
-\begin{verbatim}
-GRASS6 (stuttgart): > v.lidar.edgedetection in=station_last see=4 sen=4 \
-> lambda_g=0.1 out=station_edge
-\end{verbatim}
-\end{beamerboxesrounded}
+\vedge
 \end{frame}
 %%==================================================================F 
 \pgfdeclareimage[width=0.55\textwidth]{edge}{images/edge}
@@ -244,7 +270,15 @@ GRASS6 (stuttgart): > v.lidar.edgedetection in=station_last see=4 sen=4 \
 %%==================================================================Sb
 \subsection{Relleno de los límites de los objetos}
 %%==================================================================F 
-\begin{frame}[fragile,shrink=10]
+\defverbatim[colored]\vgrow{
+\begin{lstlisting}[style=shell]
+# IMPORTANTE: Disminuir primero la resolucion
+g.region -p res=2
+v.lidar.growing in=station_edge out=station_grow \
+> first=station_first
+\end{lstlisting}
+}
+\begin{frame}[shrink=03]
  \frametitle{\path{v.lidar.growing}}
 \begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.growing}}\texttt{ input=name output=name first=name [tj=value] [td=value]}}
 \begin{itemize}
@@ -256,19 +290,7 @@ GRASS6 (stuttgart): > v.lidar.edgedetection in=station_last see=4 sen=4 \
  \item td: Threshold in height units for classifying a point as double pulse. (default: 0.6)
 \end{itemize}
 \end{beamerboxesrounded}
-\pause
-\begin{beamerboxesrounded}[shadow=true]{Sintaxis}
-\scriptsize
-\begin{verbatim}
-GRASS6 (stuttgart): > # Se disminuye primero la resolucion
-GRASS6 (stuttgart): > g.region -p res=2
-GRASS6 (stuttgart): > v.lidar.growing in=station_edge out=station_grow \
-> first=station_first
-\end{verbatim}
-\end{beamerboxesrounded}
-\begin{itemize}
- \item \alert{Importante!!} Bajar la resolución de la región
-\end{itemize}
+\vgrow
 \end{frame}
 %%==================================================================F 
 \pgfdeclareimage[width=0.55\textwidth]{grow}{images/grow}
@@ -295,7 +317,13 @@ GRASS6 (stuttgart): > v.lidar.growing in=station_edge out=station_grow \
 %%==================================================================Sb
 \subsection{Corrección final}
 %%==================================================================F 
-\begin{frame}[fragile,shrink=5]
+\defverbatim[colored]\vcorr{
+\begin{lstlisting}[style=shell]
+v.lidar.correction in=station_grow sce=60 scn=60 lambda_c=2 \
+> tcl=0.1 out=station_corr terrain=station_terr
+\end{lstlisting}
+}
+\begin{frame}[shrink=04]
  \frametitle{\path{v.lidar.correction}}
 \begin{beamerboxesrounded}[shadow=true]{\textbf{\path{v.lidar.correction}}\texttt{ input=name  output=name  terrain=name  sce=value  scn=value  [lambda\_c=value]  [tch=value]  [tcl=value]}}
 \begin{itemize}
@@ -309,14 +337,7 @@ GRASS6 (stuttgart): > v.lidar.growing in=station_edge out=station_grow \
  \item \textbf{tcl}: Low differnce threshold (object/terrain). (default 1)
 \end{itemize}
 \end{beamerboxesrounded}
-\pause
- \begin{beamerboxesrounded}[shadow=true]{Sintaxis}
-\scriptsize
-\begin{verbatim}
-GRASS6 (stuttgart): > v.lidar.correction in=station_grow sce=60 scn=60 \
-> lambda_c=2 tcl=0.1 out=station_corr terrain=station_terr
-\end{verbatim}
-\end{beamerboxesrounded}
+\vcorr
 \end{frame}
 %%==================================================================F 
 \pgfdeclareimage[width=0.55\textwidth]{corr}{images/correction}

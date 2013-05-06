@@ -115,16 +115,13 @@
 \newcommand{\tickYes}{\color{green!50!black}\checkmark}
 
 %% PREFERENCIAS PARA LISTINGS (código)
-\lstset{
-   tabsize=4,%
-   inputencoding=latin1,%
-   extendedchars=true,%
-   basicstyle=\ttfamily\small,%
-   keywordstyle=\bfseries,%
-   commentstyle=\itshape,%
-   breaklines=true,%
-   showstringspaces=false,
-   }
+\lstdefinestyle{mio}{
+  basicstyle=\ttfamily\scriptsize,%
+  keywordstyle=\bfseries\color{ZurichBlue},%
+  commentstyle=shape\color{green},%
+  stringstyle=\color{red!50!black},
+}
+
 \lstdefinestyle{latex}
 {
 language={[latex]tex},
@@ -132,14 +129,28 @@ keywordstyle=\color{resalta!50!black},
 commentstyle=\color{fondoO!50!green}\itshape
 }
 
-\lstdefinestyle{SQL}{
-    language=SQL,
-    basicstyle=\ttfamily\footnotesize,%
-    keywordstyle=\color{red}\bfseries,%
-    commentstyle=\color{green!50!black}\itshape,%
-    backgroundcolor=\color{gray!20!white}
-    }
+\lstdefinestyle{shell}{
+  language=sh,
+  basicstyle=\ttfamily\scriptsize,%
+  morekeywords={lasinfo,lasdiff,lasmerge,las2txt,txt2las,las2ogr,laszip,
+    lasview, lasboundary, lasgrid, lasduplicate, lasoverlap,
+    las2dem, las2las, lastile, lasground, lasheight, lasclassify},
+  keywordstyle=\bfseries\color{ZurichBlue},
+  commentstyle=\color{green!35!black}%
+}
 
+\lstdefinestyle{grass}{                                                                     
+  language=sh,
+  basicstyle=\ttfamily\scriptsize,%
+  morekeywords={v.lidar.edgedetection,v.lidar.growing,
+  v.lidar.correction,v.surf.bspline,v.outlier},
+  keywordstyle=\bfseries\color{ZurichBlue},classoffset=1,
+  commentstyle=shape\color{green!75!black},%
+  morekeywords={GRASS6 (stuttgart):, >}
+  keywordstyle=\color{green!50!black}, classoffset=0
+}
+
+%
 \lstdefinestyle{matlab}{
   basicstyle=\scriptsize\ttfamily,
   breaklines=true,
@@ -150,7 +161,14 @@ commentstyle=\color{fondoO!50!green}\itshape
   identifierstyle=\bfseries
 }
 
-%\lstset{style=mio}
+\lstset{style=mio,
+   tabsize=4,%
+   inputencoding=utf8,%latin1,%
+   extendedchars=true,%
+   breaklines=true,%
+   showstringspaces=false,
+   backgroundcolor=\color{gray!20!white}
+   }
 
 %% DATOS DEL DOCUMENTO
 \title[FOSS para trabajar con LiDAR]
@@ -182,6 +200,6 @@ commentstyle=\color{fondoO!50!green}\itshape
 %\includeonlyframes{cc}
 %intro3,intro4,funciona,ventajas1,ventajas2,ventajas3
 %desventajas,miktex,miktex2,editores,otrasherr
-\input{filtro}
-%\input{filtrograss}
+%\input{filtro}
+\input{filtrograss}
 \end{document}

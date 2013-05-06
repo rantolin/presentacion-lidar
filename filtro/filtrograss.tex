@@ -152,12 +152,17 @@ GRASS6: > r.in.xyz in=csite4 out=pasadas method=n fs='|'
 \defverbatim[colored]\xyz{
 \begin{lstlisting}[style=shell]
 # Generar un raster con la informacion LiDAR
-r.in.xyz in=csite4 out=stuttgart fs='|' x=1 y=2 z=3
+r.in.xyz in=csite4 out=stuttgart_first fs='|' x=1 y=2 z=3
+r.in.xyz in=csite4 out=stuttgart_last fs='|' x=4 y=5 z=6
 \end{lstlisting}
 }
 \begin{frame}
  \frametitle{Solape de pasadas: \LARGE\path{r.in.xyz}}
  \xyz
+ \begin{center}
+ \includegraphics[height=50mm]{images/rinxyz_first}~
+ \includegraphics[height=50mm]{images/rinxyz_last}
+ \end{center}
 \end{frame}
 %%==================================================================F 
 \defverbatim[colored]\vascii{
@@ -171,6 +176,9 @@ v.in.ascii -tbzr in=csite4 out=stuttgart_last fs='|' x=4 y=5 z=6
 \begin{frame}
  \frametitle{Importar como vectorial: \LARGE\path{v.in.ascii}}
  \vascii
+ \begin{center}
+ \includegraphics[height=50mm]{images/vinascii_strips}
+ \end{center}
 \end{frame}
 %%==================================================================F 
 \defverbatim[colored]\vlidar{
@@ -187,6 +195,16 @@ v.in.lidar -tb input="Serpent Mound Model LAS Data.las" output=
 \begin{frame}
  \frametitle{Importar como .LAS: \LARGE\path{v.in.las}}
  \vlidar
+ \begin{center}
+ \includegraphics[height=50mm]{images/vinascii_strips}
+ \end{center}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+  \frametitle{Importar como LAS: \LARGE\path{v.in.las}}
+ \begin{center}
+ \includegraphics[height=50mm]{images/vinascii_strips}
+ \end{center}
 \end{frame}
 %%==================================================================Sb
 \subsection{Eliminando puntos groseros}
@@ -219,6 +237,18 @@ v.outlier in=stuttgart_last out=station_last \
 %%==================================================================F 
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.outlier}}
+ \begin{center}
+ \includegraphics[height=50mm]{images/voutlier_first}~
+ \includegraphics[height=50mm]{images/routlier_first}
+ \end{center}
+\end{frame}
+%%==================================================================F 
+\begin{frame}
+ \frametitle{Visualización de \LARGE\path{v.outlier}}
+ \begin{center}
+ \includegraphics[height=50mm]{images/voutlier_last}~
+ \includegraphics[height=50mm]{images/routlier_last}
+ \end{center}
 \end{frame}
 %%==================================================================Sb
 \subsection{Detección de borde de objetos}

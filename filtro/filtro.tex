@@ -109,241 +109,6 @@
     \end{enumerate}
 \end{frame}
 %%==================================================================S
-\section[Filtros]{Filtros ALS}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros}
-  \begin{enumerate}
-    \item Es necesario extraer información de la nube de puntos: terreno,
-      no-terreno.
-    \item Paso imprescindible para la generación de DTM
-    \item Clasificación en diferentes categorías:
-      \begin{itemize}
-        \item Terreno
-        \item Edificio
-        \item Vegetación
-        \item Pasos elevados, etc\ldots
-      \end{itemize}
-    \item Las idea subyacente son también aplicables otras técnicas como TLS,
-      pero con características diferentes (densidad).
-  \end{enumerate}
-\end{frame}
-%%==================================================================Sc
-\subsection{Definición}
-%%==================================================================F
-\begin{frame}[label=filter_def]
-    \frametitle{Filtros ALS}
-    %\onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Nube de puntos LiDAR}}
-    % Es un conjunto de puntos tridimensionales con un atributo asociado: 
-    % $V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) | x \in \mathbb{R}^3, c \in \mathbb{N} \right\rbrace$
-    %\end{beamerboxesrounded}
-    \onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Clasificación}}
-      Dada una nube de puntos,$V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) 
-      \left| x \in \mathbb{R}^3, c \in \mathbb{N} \right. \right\rbrace $, se 
-      puede definir como \alert{\emph{clasificación}} a la función $f: \mathbf{x} \to c$ 
-      que a cada punto tridimensional, $\mathbf{x}$, le asigna su atributo, $c$.
-    \end{beamerboxesrounded}
-
-    \onslide<2->{El problema formal de clasificar se restringe a encontrar la
-      función $f$ tal que asigna:
-    \begin{itemize}
-      \item \alert<2>{1}, si el punto pertenece a un \alert<2>{objeto}
-      \item<3-> \alert<3>{0}, si el punto pertenece al \alert<3>{terreno}
-    \end{itemize}}
-
-    \onslide<4>\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Filtrar}}
-     Consiste en \alert<4>{eliminar} los puntos de $V$ con atributo igual 1 (objeto) y dejar los clasificados como 0 (terreno).
-    \end{beamerboxesrounded}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-    \frametitle{Tipos de clasificaciones}
-    \begin{enumerate}
-        \item Morfológicos
-        \item Densificación progresiva
-        \item Basado en superficies
-        \item Segmentación y \emph{clustering}
-        \item Estudio de pendientes (splines)
-    \end{enumerate}
-\end{frame}
-%%==================================================================Sb
-\subsection{Morfológicos}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros morfológicos}
-  \begin{enumerate}
-    \item<1-> \alert{Morfología}: Conjunto de métodos del análisis de imágenes que
-      dan una descripción cuantitativa de estructuras geométricas.
-    \item<2-> Existen dos operadores básicos: \alert{Erosión} y \alert{dilatación}.
-    \item<2-> Ayudan a simplicar la estructura de una superficie basándose en un
-      cierto elemento.
-    \item<3-> Combinaciones de ambos:
-      \begin{itemize}
-        \item<3-> \alert{apertura}\uncover<5->{: erosión $\to$ dilatación}
-        \item<3-> \alert{clausura}\uncover<5->{: dilatación $\to$ erosión}
-        \only<4>{\item \alert{Y NO, NO ES FÚTBOL, CARAJO!}}
-        \item<6-> Ayudan a determina el máximo y el mínimo basándose en un cierto elemento.
-      \end{itemize}
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros morfológicos}
-  \begin{center}
-    \includegraphics[height=0.70\textheight]{images/morfologia}
-  \end{center}
-\end{frame}
-%%==================================================================Sb
-\subsection{Densificación progresiva}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros de densificación progresiva}
-  \begin{enumerate}
-    \item Triangulación progresiva de un TIN 
-    \item Empiezan con un pequeño subconjunto de puntos de la nube: pre-clasificación del terreno
-    \item Incrementan de manera iterativa la cantidad de información para
-      clasificar todo la nube paso a paso.
-    \item Para incrementar siguen varios criterios: ángulos y altura respecto a
-      los triángulos del TIN
-      \begin{itemize}
-        \item Hansen y Vögtle (1999)
-        \item Axelsson (2000)
-        \item Sohn y Dowman (2002)
-      \end{itemize}
-  \end{enumerate}
-\end{frame}
-%%==================================================================Sb
-\subsection{Superficies}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros basados en superficies}
-  \begin{enumerate}
-    \item Utilizan una reconstrucción de superficies de referencia
-    \item Similares a la densificación progresiva
-    \item Asumen que todos los puntos de la superficie pertenecen al terreno 
-    \item Progresivamente eliminan puntos que no se ajustan al modelo de tereno
-  \end{enumerate}
-  \begin{center}
-    \includegraphics[height=0.40\textheight]{images/surfbased_filter}
-  \end{center}
-\end{frame}
-%%==================================================================F
-%\begin{frame}
-%  \frametitle{Filtros basados en superficies}
-%  \begin{center}
-%    \includegraphics[height=0.50\textheight]{images/surfbase_filter}
-%  \end{center}
-%\end{frame}
-%%==================================================================Sb
-\subsection{Segmentación}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros de segmentación}
-  \begin{enumerate}
-    \item Clasifican \alert{segmentos} enteros de puntos: conjuntos de puntos
-      vecinos con propiedades similares
-    \item Intentan evitar el problema de puntos individuales mal clasificados
-    \item Hay dos pasos básicos
-      \begin{itemize}
-        \item Generar por agregación segmentos de puntos
-        \item Clasificar dichos segmentos
-      \end{itemize}
-    \item Se pueden elegir varios algoritmos para cada paso
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros de segmentación}
-  \begin{enumerate}
-    \item<1-> Se utilizan técnicas de \alert{crecimiento de regiones}
-    \item<1-> Se agrupan puntos vecinos con propiedades similares dentro de un
-      umbral: altura, vector normal, etc,\ldots
-    \item<2-> La segmentación se puede hacer en el espacio objeto:
-      \alert{segmentación}
-    \item<3-> o en el espacio de las características: \alert{\emph{clustering}}
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Filtros de segmentación}
-  \begin{center}
-    \includegraphics[height=0.70\textheight]{images/clustering}
-  \end{center}
-\end{frame}
-%%==================================================================Sb
-\subsection{Comparación de filtros}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Comparación de filtros}
-    \begin{itemize}
-      \item Estudio del rendimiento de los 8 filtros distintos 
-      \item Auspiciado por el \emph{International Society of Photogrammetry and
-        Remote Sensing} (\alert{ISPRS})
-      \item Estudio cualitativo y cuantitativo
-    \end{itemize}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Resultados}
-  \begin{enumerate}
-    \item Todos los filtros funcionan correctamente con escenarios poco exigentes
-      \begin{itemize}
-        \item Poca o nula pendiente, y extensas zonas de terreno
-        \item Pequeños edificios
-        \item Vegetación dispersa
-      \end{itemize}
-    \item Mayores problemas en zonas con:
-      \begin{itemize}
-        \item Edificios voluminosos con escasa extensión de terreno
-        \item Parches de terreno a diferentes alturas o con alturas variables
-      \end{itemize}
-    \item<2-> Mejores prestaciones: \alert<2>{densificación progresiva} y los basados
-      en la \alert<2>{determinación de superficies}
-    \item<3-> Los más desarrollados: \alert<3>{segmentación y clustering}
-    \item<4-> \alert<4>{Combinación} de varios algoritmos e \emph{inputs} distintos
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Automatización Vs Manual}
-  \begin{enumerate}
-    \item Comparados con la fotogrametría, los filtros son procesos \alert{automáticos}
-    \item Todavía no se ha encontrado un filtro completamente automático y
-      \alert{universal}
-    \item \alert{Necesaria} una revisión y edición manual (cercados,
-      umbrales\ldots)
-      \begin{itemize}
-        \item Zonas urbanas 
-        \item \alert{Innecesaria en zonas rurales}
-        \item Puentes y pasos elevados
-        \item Algoritmos basados en relaciones geométricas de puntos vecinos
-        \item El terreno no puede ser identificado por escasez de puntos
-        %\item El trabajo depende de las características de la superficie
-      \end{itemize}
-    \item Fuentes de datos adicionales pueden disminuir la revisión
-      \begin{itemize}
-        \item Delimitación de edificios
-        \item Contexto de terreno local
-        \item Información radiométrica: \alert{externa} o la \alert{devuelta por
-          el láser}
-      \end{itemize}
-  \end{enumerate}
-\end{frame}
-%%==================================================================F
-\begin{frame}
-  \frametitle{Densidad puntual}
-  \begin{itemize}
-    \item La influencia de la densidad depende fuertemente de la topografía
-    \item Se necesita una densidad mínima para asegurar cierta penetración en
-      zonas vegetales
-    \item En zonas complejas es además importante para asegurar la
-      representación de calidad de los detalles del escenario
-    \item Incluso con alta densidad, los filtros presentan problemas de
-      clasificación
-    \item Según disminuye la densidad los resultados empobrecen rápidamente
-  \end{itemize}
-\end{frame}
-%%==================================================================Sc
 \section[DTM]{Generación de Modelos Digitales del Terreno}
 %%==================================================================F
 \begin{frame}
@@ -761,6 +526,289 @@
       \end{itemize}
   \end{enumerate}
 \end{frame}
+\section[Filtros]{Filtros ALS}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros}
+  \begin{enumerate}
+    \item Es necesario extraer información de la nube de puntos: terreno,
+      no-terreno.
+    \item Paso imprescindible para la generación de DTM
+    \item Clasificación en diferentes categorías:
+      \begin{itemize}
+        \item Terreno
+        \item Edificio
+        \item Vegetación
+        \item Pasos elevados, etc\ldots
+      \end{itemize}
+    \item Las idea subyacente son también aplicables otras técnicas como TLS,
+      pero con características diferentes (densidad).
+  \end{enumerate}
+\end{frame}
+%%==================================================================Sc
+\subsection{Definición}
+%%==================================================================F
+\begin{frame}[label=filter_def]
+    \frametitle{Filtros ALS}
+    %\onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Nube de puntos LiDAR}}
+    % Es un conjunto de puntos tridimensionales con un atributo asociado: 
+    % $V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) | x \in \mathbb{R}^3, c \in \mathbb{N} \right\rbrace$
+    %\end{beamerboxesrounded}
+    \onslide<1->\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Clasificación}}
+      Dada una nube de puntos,$V = \left\lbrace \mathbf{p}=\left(\mathbf{x},c\right) 
+      \left| x \in \mathbb{R}^3, c \in \mathbb{N} \right. \right\rbrace $, se 
+      puede definir como \alert{\emph{clasificación}} a la función $f: \mathbf{x} \to c$ 
+      que a cada punto tridimensional, $\mathbf{x}$, le asigna su atributo, $c$.
+    \end{beamerboxesrounded}
+
+    \onslide<2->{El problema formal de clasificar se restringe a encontrar la
+      función $f$ tal que asigna:
+    \begin{itemize}
+      \item \alert<2>{1}, si el punto pertenece a un \alert<2>{objeto}
+      \item<3-> \alert<3>{0}, si el punto pertenece al \alert<3>{terreno}
+    \end{itemize}}
+
+    \onslide<4>\begin{beamerboxesrounded}[shadow=true]{Definición: \emph{Filtrar}}
+     Consiste en \alert<4>{eliminar} los puntos de $V$ con atributo igual 1 (objeto) y dejar los clasificados como 0 (terreno).
+    \end{beamerboxesrounded}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+    \frametitle{Tipos de clasificaciones}
+    \begin{enumerate}
+        \item Morfológicos
+        \item Densificación progresiva
+        \item Basado en superficies
+        \item Segmentación y \emph{clustering}
+        \item Estudio de pendientes (splines)
+    \end{enumerate}
+\end{frame}
+%%==================================================================Sb
+\subsection{Morfológicos}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos}
+  \begin{enumerate}
+    \item<1-> \alert{Morfología}: Conjunto de métodos del análisis de imágenes que
+      dan una descripción cuantitativa de estructuras geométricas.
+    \item<2-> Existen dos operadores básicos: \alert{Erosión} y \alert{dilatación}.
+    \item<2-> Ayudan a simplificar la estructura de una superficie basándose en un
+      cierto elemento estructural.
+    \item<3-> Combinaciones de ambos:
+      \begin{itemize}
+        \item<3-> \alert{apertura}\uncover<5->{: erosión $\to$ dilatación}
+        \item<3-> \alert{clausura}\uncover<5->{: dilatación $\to$ erosión}
+        \only<4>{\item \alert{Y NO, NO ES FÚTBOL, CARAJO!}}
+        \item<6-> Ayudan a determina el máximo y el mínimo basándose en un cierto elemento.
+      \end{itemize}
+    \item<7-> Normalmente los algoritmos se aplican a los puntos 
+    \item<7-> La morfología matemática tiene sus orígenes en estructuras ráster:
+      ayudan a agilizar los cálculos
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos: Linderberger (1993)}
+  \begin{enumerate}
+    \item Utiliza como elemento estructural una ventana móvil que desplaza 
+      a lo largo de todos los puntos
+    \item La ventana se puede adaptar según la densidad de puntos
+    \item Las operaciones de apertura y clausura generan la superficie superior
+      e inferior que representan los puntos en la ventana
+    \item La erosión y la dilatación determinan el punto central de la ventana
+      según el punto más bajo y más alto en ella
+    \item La superficie más baja es considerada como el DTM y se usa para
+      filtrar los puntos según una tolerancia en altura
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{images/morfologia}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos: Vosselman (2000)}
+  \begin{enumerate}
+    \item El elemento estructural es una función que describe la diferencia de
+      altura máxima admisible según la distancia al punto
+      \begin{itemize}
+        \item Generalmente un círculo
+        \item La función se puede definir a partir de la pendiente máxima del
+          escenario
+        \item Mediante áreas de entrenamiento se puede llegar a un elemento
+          óptimo que minimice los errores por comisión y omisión
+      \end{itemize}
+    \item Se posiciona el elemento estructural en cada punto 
+    \item Si alguna de las alturas de los puntos en el ámbito del elemento 
+      estructural es mayor que la máxima altura permitida, el punto es 
+      considerado como no-terreno.
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros morfológicos: Sithole (2001)}
+  \begin{enumerate}
+    \item Basado en Vosselman (2000)
+    \item Utiliza una función adaptativa según en la pendiente del terreno 
+      para determinar la diferencia de altura admitida
+    \item Necesita un DTM inicial cuyas celdas toman el valor de la menor altura
+      entre todos los puntos del píxel
+  \end{enumerate}
+\end{frame}
+%%==================================================================Sb
+\subsection{Densificación progresiva}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de densificación progresiva}
+  \begin{enumerate}
+    \item Triangulación progresiva de un TIN 
+    \item Empiezan con un pequeño subconjunto de puntos de la nube: pre-clasificación del terreno
+    \item Incrementan de manera iterativa la cantidad de información para
+      clasificar todo la nube paso a paso.
+    \item Para incrementar siguen varios criterios: ángulos y altura respecto a
+      los triángulos del TIN
+      \begin{itemize}
+        \item Hansen y Vögtle (1999)
+        \item Axelsson (2000)
+        \item Sohn y Dowman (2002)
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================Sb
+\subsection{Superficies}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros basados en superficies}
+  \begin{enumerate}
+    \item Utilizan una reconstrucción de superficies de referencia
+    \item Similares a la densificación progresiva
+    \item Asumen que todos los puntos de la superficie pertenecen al terreno 
+    \item Progresivamente eliminan puntos que no se ajustan al modelo de tereno
+  \end{enumerate}
+  \begin{center}
+    \includegraphics[height=0.40\textheight]{images/surfbased_filter}
+  \end{center}
+\end{frame}
+%%==================================================================F
+%\begin{frame}
+%  \frametitle{Filtros basados en superficies}
+%  \begin{center}
+%    \includegraphics[height=0.50\textheight]{images/surfbase_filter}
+%  \end{center}
+%\end{frame}
+%%==================================================================Sb
+\subsection{Segmentación}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{enumerate}
+    \item Clasifican \alert{segmentos} enteros de puntos: conjuntos de puntos
+      vecinos con propiedades similares
+    \item Intentan evitar el problema de puntos individuales mal clasificados
+    \item Hay dos pasos básicos
+      \begin{itemize}
+        \item Generar por agregación segmentos de puntos
+        \item Clasificar dichos segmentos
+      \end{itemize}
+    \item Se pueden elegir varios algoritmos para cada paso
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{enumerate}
+    \item<1-> Se utilizan técnicas de \alert{crecimiento de regiones}
+    \item<1-> Se agrupan puntos vecinos con propiedades similares dentro de un
+      umbral: altura, vector normal, etc,\ldots
+    \item<2-> La segmentación se puede hacer en el espacio objeto:
+      \alert{segmentación}
+    \item<3-> o en el espacio de las características: \alert{\emph{clustering}}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de segmentación}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{images/clustering}
+  \end{center}
+\end{frame}
+%%==================================================================Sb
+\subsection{Comparación de filtros}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Comparación de filtros}
+    \begin{itemize}
+      \item Estudio del rendimiento de los 8 filtros distintos 
+      \item Auspiciado por el \emph{International Society of Photogrammetry and
+        Remote Sensing} (\alert{ISPRS})
+      \item Estudio cualitativo y cuantitativo
+    \end{itemize}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Resultados}
+  \begin{enumerate}
+    \item Todos los filtros funcionan correctamente con escenarios poco exigentes
+      \begin{itemize}
+        \item Poca o nula pendiente, y extensas zonas de terreno
+        \item Pequeños edificios
+        \item Vegetación dispersa
+      \end{itemize}
+    \item Mayores problemas en zonas con:
+      \begin{itemize}
+        \item Edificios voluminosos con escasa extensión de terreno
+        \item Parches de terreno a diferentes alturas o con alturas variables
+      \end{itemize}
+    \item<2-> Mejores prestaciones: \alert<2>{densificación progresiva} y los basados
+      en la \alert<2>{determinación de superficies}
+    \item<3-> Los más desarrollados: \alert<3>{segmentación y clustering}
+    \item<4-> \alert<4>{Combinación} de varios algoritmos e \emph{inputs} distintos
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Automatización Vs Manual}
+  \begin{enumerate}
+    \item Comparados con la fotogrametría, los filtros son procesos \alert{automáticos}
+    \item Todavía no se ha encontrado un filtro completamente automático y
+      \alert{universal}
+    \item \alert{Necesaria} una revisión y edición manual (cercados,
+      umbrales\ldots)
+      \begin{itemize}
+        \item Zonas urbanas 
+        \item \alert{Innecesaria en zonas rurales}
+        \item Puentes y pasos elevados
+        \item Algoritmos basados en relaciones geométricas de puntos vecinos
+        \item El terreno no puede ser identificado por escasez de puntos
+        %\item El trabajo depende de las características de la superficie
+      \end{itemize}
+    \item Fuentes de datos adicionales pueden disminuir la revisión
+      \begin{itemize}
+        \item Delimitación de edificios
+        \item Contexto de terreno local
+        \item Información radiométrica: \alert{externa} o la \alert{devuelta por
+          el láser}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Densidad puntual}
+  \begin{itemize}
+    \item La influencia de la densidad depende fuertemente de la topografía
+    \item Se necesita una densidad mínima para asegurar cierta penetración en
+      zonas vegetales
+    \item En zonas complejas es además importante para asegurar la
+      representación de calidad de los detalles del escenario
+    \item Incluso con alta densidad, los filtros presentan problemas de
+      clasificación
+    \item Según disminuye la densidad los resultados empobrecen rápidamente
+  \end{itemize}
+\end{frame}
+%%==================================================================Sc
 %%==================================================================Sc
 \section{Clasificación mediante splines}
 %%==================================================================Sb

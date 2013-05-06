@@ -677,6 +677,66 @@
       \end{itemize}
   \end{enumerate}
 \end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de densificación progresiva: Axelsson (2000)}
+  \begin{enumerate}
+    \item El conjunto inicial de puntos se genera a partir de una compartición
+      en bloques y eligiendo, para cada bloque, el punto con altura más baja
+    \item Este conjunto se triangula generando una aproximación del terreno
+    \item Se añade un punto más al modelo si se verifica cierto criterio
+      \begin{itemize}
+        \item Los ángulos $\alpha_i = \widehat{PA_i}, i=1,2,3$ entre la cara del
+          triángulo y las líneas que unen los tres puntos $A_i$ son más pequeños
+          que ciertos valores dados
+      \end{itemize}
+    \item El proceso se repite hasta que:
+      \begin{itemize}
+        \item no se pueden añadir más puntos al TIN, o
+        \item si se alcanza cierta densidad puntual: los lados de todos los
+          triángulos son más pequeños que un umbral
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de densificación progresiva: Hansen y Vögtle (1999)}
+  \begin{enumerate}
+    \item El conjunto inicial de puntos se genera como la parte más baja de
+      cierre convexo de los puntos de la nube
+    \item Este conjunto se triangula generando una aproximación del terreno
+    \item Se añade un punto más al modelo si se verifica cierto criterio
+      \begin{itemize}
+        \item La diferencia de alturas entre el punto candidato y la superficie
+          del triángulo
+      \end{itemize}
+    \item El proceso se repite hasta que:
+      \begin{itemize}
+        \item no se pueden añadir más puntos al TIN, o
+        \item si se alcanza cierta densidad puntual: los lados de todos los
+          triángulos son más pequeños que un humbral
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros de densificación progresiva: Sohn y Dowman (2002)}
+  \begin{enumerate}
+    \item El conjunto inicial de puntos se genera mediante:
+      \begin{itemize}
+        \item los puntos más bajo de las cuatro esquinas del área a filtrar
+        \item Se densifica el conjunto inicial añadiendo el punto más bajo 
+          en cada triángulo hasta que no se pueden añadir más
+      \end{itemize}
+    \item Se añade un punto más al modelo si está en un \emph{buffer} respecto a
+      la superficie actual y si verifica un criterio de \emph{Minimum
+      Description Length} (\alert{MDL})
+      \begin{itemize}
+        \item Minimiza la cantidad necesaria de puntos para describir la
+          superficie
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
 %%==================================================================Sb
 \subsection{Superficies}
 %%==================================================================F
@@ -699,6 +759,52 @@
 %    \includegraphics[height=0.50\textheight]{images/surfbase_filter}
 %  \end{center}
 %\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros basados en superficies: Kraus y Pfeifer (1998)}
+  \begin{enumerate}
+    \item Basado en una \alert{interpolación robusta}: trata de determinar un peso 
+      $p_i \in [0;1]$ para cada punto $P_i$ de modo que la superficie 
+      modelada represente el terreno
+      \begin{enumerate}
+        \item<2-> Interpolación de la superficie considerando los pesos. Al inicio
+          $p_i = 1$
+        \item<3-> Cálculo de valores $f_i$: distancia entre la superficie y el punto
+          $P_i$
+        \item<4-> Cálculo de un nuevo peso $p_i$ en base a los $f_i$
+        \item<5-> Estos pasos se repiten hasta:
+          \begin{itemize}
+            \item<5-> Llegar a una superficie estable (los pesos permanecen estables)
+            \item<5-> Alcanzar un número máximo de repeticiones
+          \end{itemize}
+      \end{enumerate}
+    \item<6-> Integra el filtrado y la generación del DTM en el mismo proceso
+    \item<6-> Los puntos son clasificados como terreno y no-terreno basándose en un
+      umbral para la diferencia de altura entre el punto y la superficie
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Filtros basados en superficies: Elmqvist \emph{et al.} (2001)}
+  \begin{enumerate}
+    \item La superficie se determina minimizando una función
+      \alert{\emph{energía}} en la que entran en juego dos parámetros:
+      \begin{itemize}
+        \item \alert{Rigidez} o fuerza interna:
+        \item Las observaciones o fuerza externa que obliga a la superficie a
+          pasar por ellas
+      \end{itemize}
+     \item La superficie inicial es horizontal y está por debajo de todos los
+       puntos
+     \item La ``fuerza'' de los puntos se aplica de manera iterativa
+       $\Rightarrow$ La superficie se deforma hacia los puntos
+     \item La deformación está restringida por la rigidez de la superficie
+     \item Asegura la poca influencia de puntos objetos y su aproximación al
+       terreno
+     \item La clasificación se realiza con una banda de tolerancia alrededor de
+       la superficie final
+  \end{enumerate}
+\end{frame}
 %%==================================================================Sb
 \subsection{Segmentación}
 %%==================================================================F
@@ -734,6 +840,37 @@
   \begin{center}
     \includegraphics[height=0.70\textheight]{images/clustering}
   \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Sithole (2005) y Sithole y Vosselman(2005)}
+  \begin{enumerate}
+    \item Utilizan los últimos impulsos 
+    \item Metodología basada en la intersección de perfiles
+      \begin{itemize}
+        \item La nube es dividida en diferentes perfiles y los puntos son unidos
+          por segmentos siguiendo ciertos criterios
+        \item Los segmentos se hallan agrupando los segmentos de los perfiles
+      \end{itemize}
+    \item La clasificación se basa las relaciones de vecindad de los segmentos
+    \item Durante el proceso global se utilizan diferentes criterios para hallar
+      puentes, micro y macro objetos y objetos artificiales o naturales
+  \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Tovari y Pfeifer (2005)}
+  \begin{enumerate}
+    \item La segmentación se basa en algoritmos de \alert{\emph{region growing}}
+    \item Empezando por un punto, se añaden puntos con características
+      similares:
+      \begin{itemize}
+        \item Similitud entre los vectores normales
+        \item Proximidad espacial
+      \end{itemize}
+    \item Después de la segmentación se sigue un filtrado basado en superficies
+      mediante una técnica de interpolación robusta
+  \end{enumerate}
 \end{frame}
 %%==================================================================Sb
 \subsection{Comparación de filtros}

@@ -27,7 +27,7 @@
 \end{frame}
 
 %%%==================================================================S INTRODUCTION
-\section[ALS]{\textquestiondown Qué es el LiDAR aéreo?}
+%\section[ALS]{\textquestiondown Qué es el LiDAR aéreo?}
 %%%==================================================================Sb
 %\subsection{Principios}
 %%%==================================================================F 
@@ -64,34 +64,29 @@
 %    \end{enumerate}
 %\end{frame}
 %%==================================================================Sb
-\subsection{Primer y último impulso}
+%\subsection{Primer y último impulso}
 %%==================================================================F 
-\mode<beamer>{
-  \pgfdeclareimage[height=40mm]{roof}{images/roof}
-  \pgfdeclareimage[height=40mm]{tree}{images/tree}
-}
-\mode<beamer:0>{
-  \pgfdeclareimage[height=40mm]{roofg}{images/roof_grey}
-  \pgfdeclareimage[height=40mm]{treeg}{images/tree_grey}
-}
+\begin{frame}
+  \frametitle{LiDAR}
+    \begin{center}
+      \only<1>{\includegraphics[height=0.75\textheight]{images/rebote}}
+      \only<2>{\includegraphics[height=0.75\textheight]{images/rebotes}}
+    \end{center}
+\end{frame}
+%%==================================================================F
 \begin{frame}[label=firstlast1]
     \frametitle{Primer y último impulso}
     \begin{enumerate}[<+->]
-        \item Debido a la divergencia del láser, pueden recibirse \alert<1>{más de un eco} para el mismo rayo.
-	\item Los sensores actuales son capaces de medir al menos dos retornos: \alert<2>{primero} y \alert<2>{último}
-	\item Normalmente se producen por: \alert<3->{bordes} de edificios \uncover<4->{o \alert<4>{vegetación}}
+        \item Debido a la divergencia del láser, pueden recibirse 
+          \alert<1>{más de un eco} para el mismo rayo.
+	\item Los sensores actuales son capaces de medir al menos dos retornos: 
+          \alert<2>{primero} y \alert<2>{último}
+	\item Normalmente se producen por: \alert<3->{bordes} de edificios 
+          \uncover<4->{o \alert<4>{vegetación}}
     \end{enumerate}
     \begin{center}
-   	\begin{tikzpicture}
-	\mode<beamer>{
-    	  \uncover<3->{\pgftext[bottom,left,at={\pgfpointxy{-2}{0}}]{\pgfuseimage{roof}}}
-    	  \uncover<4>{\pgftext[bottom,left,at={\pgfpointxy{2}{0}}]{\pgfuseimage{tree}}}
-	}
-	\mode<beamer:0>{
-    	  \pgftext[bottom,left,at={\pgfpointxy{-2}{0}}]{\pgfuseimage{roofg}}
-    	  \pgftext[bottom,left,at={\pgfpointxy{2}{0}}]{\pgfuseimage{treeg}}
-	}
-	\end{tikzpicture}
+      \uncover<3->{\includegraphics[height=0.35\textheight]{images/roof}}~
+      \uncover<4>{\includegraphics[height=0.35\textheight]{images/tree}}
     \end{center}
 \end{frame}
 %%==================================================================F 
@@ -99,17 +94,16 @@
     \frametitle{\textquestiondown Para qué sirve?}
     \begin{enumerate}[<+->]
      \item Una diferencia considerable entre el primer y último impulso puede ser una pista para detectar vegetación y otros objetos: edificios, puentes, tendidos eléctricos...
-     \item Los últimos impulsos tienen más probabilidad de ser terreno.
-     \item Mediante una simple interpolación:
+     \item Los últimos impulsos tienen más probabilidad de ser terreno
      	\begin{itemize}
      	   \item Primer impulso: creación de Modelo Digital de Superficie (\alert<4>{DSM})
-     	   \item \'Ultimo impulso: ``creación'' de Modelo Digital del Terreno (\alert<5>{DTM})
+     	   \item \'Ultimo impulso: determinación de Modelo Digital del Terreno (\alert<5>{DTM})
      	\end{itemize}
      \item Hay pocas posibilidades de, sin hacer ningún análisis, distinguir entre un punto \alert<6>{objeto} y uno \alert<6>{terreno}.
     \end{enumerate}
 \end{frame}
 %%==================================================================S
-\section[DTM]{Generación de Modelos Digitales del Terreno}
+\section[DTM]{Modelos Digitales del Terreno}
 %%==================================================================F
 \begin{frame}
   \frametitle{Modelos Digitales del Terreno (DTM)}
@@ -195,6 +189,13 @@
         \item[\tickYes] Existen multitud de formatos ``estándar''
       \end{itemize}
   \end{enumerate}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Estándares}
+    \begin{center}
+      \includegraphics[width=0.75\textwidth]{images/standards}
+    \end{center}
 \end{frame}
 %%==================================================================F
 \begin{frame}
@@ -330,6 +331,13 @@
   \end{beamerboxesrounded}
   \begin{center}
   \includegraphics[height=0.20\textwidth]{images/propiedad2}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
+  \frametitle{Diagrama de Voronoi}
+  \begin{center}
+  \includegraphics[height=0.20\textwidth]{images/voronoi}
   \end{center}
 \end{frame}
 %%==================================================================Sb
@@ -649,6 +657,13 @@
 \end{frame}
 %%==================================================================F
 \begin{frame}
+  \frametitle{Filtros morfológicos: Vosselman (2000)}
+  \begin{center}
+    \includegraphics[height=0.70\textheight]{images/morph_element}
+  \end{center}
+\end{frame}
+%%==================================================================F
+\begin{frame}
   \frametitle{Filtros morfológicos: Sithole (2001)}
   \begin{enumerate}
     \item Basado en Vosselman (2000)
@@ -912,15 +927,20 @@
     \item Comparados con la fotogrametría, los filtros son procesos \alert{automáticos}
     \item Todavía no se ha encontrado un filtro completamente automático y
       \alert{universal}
-    \item \alert{Necesaria} una revisión y edición manual (cercados,
-      umbrales\ldots)
+    \item<2-> \alert{Necesaria} una revisión y edición manual \uncover<3->{(cercados,
+      umbrales\ldots)}
+    \only<2>{
+        \begin{center}
+        \includegraphics[height=0.60\textheight]{images/mano_dios}
+        \end{center}
+    }
+    \uncover<3->{
       \begin{itemize}
         \item Zonas urbanas 
         \item \alert{Innecesaria en zonas rurales}
         \item Puentes y pasos elevados
         \item Algoritmos basados en relaciones geométricas de puntos vecinos
         \item El terreno no puede ser identificado por escasez de puntos
-        %\item El trabajo depende de las características de la superficie
       \end{itemize}
     \item Fuentes de datos adicionales pueden disminuir la revisión
       \begin{itemize}
@@ -929,6 +949,7 @@
         \item Información radiométrica: \alert{externa} o la \alert{devuelta por
           el láser}
       \end{itemize}
+    }
   \end{enumerate}
 \end{frame}
 %%==================================================================F
@@ -1542,4 +1563,7 @@ vegetación y edificio.}
     \end{tikzpicture}
     \end{figure}
 \end{frame}
-%%==================================================================F
+%%==================================================================FIN
+\begin{frame}
+ \titlepage
+\end{frame}

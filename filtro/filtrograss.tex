@@ -48,7 +48,7 @@ Metadatos
 \frametitle{Estación f.c. de Stuttgart}
  \begin{columns}
   \begin{column}{0.45\textwidth}
-	Coordenadas UTM (MBR):
+	Coordenadas UTM-32 (MBR):
 	\begin{itemize}
 	 \item Norte = $5403764~m$
 	 \item Sur = $5403188~m$
@@ -86,7 +86,6 @@ Metadatos
 %%==================================================================F 
 \frame[containsverbatim]{%
 \frametitle {Posible formato ASCII}
-\head
 \begin{center}
 \begin{verbatim}
               X          Y       Z
@@ -137,12 +136,12 @@ Metadatos
 \defverbatim[colored]\vlidar{
 \begin{lstlisting}[style=shell]
 # Mostrar la informacion del LAS
-v.in.lidar -p input=CSite4_orig.txt.las
+v.in.lidar -p input=CSite4_orig.las
 # Crear una nueva ``localizacion'' con la informacion del LAS
-v.in.lidar -i input=CSite4_orig.txt location=Stuttgart
+v.in.lidar -i input=CSite4_orig.las location=Stuttgart
 # Cerrar y abrir GRASS en la nueva localizacion
 # Importar el archivo LAS sin topologia ni tabla asociada
-v.in.lidar -tb input=CSite4_orig.txt output=stuttgartLAS
+v.in.lidar -tb input=CSite4_orig.las output=stuttgartLAS
 \end{lstlisting}
 }
 \begin{frame}
@@ -160,12 +159,13 @@ v.in.lidar -tb input=CSite4_orig.txt output=stuttgartLAS
 \defverbatim[colored]\head{
 \begin{lstlisting}[style=shell]
   $ # Copiar python en ``/Documents and Settings/aula1/Desktop/taller LiDAR/''
+  $ # Descargar el conversor de datos de http://tinyurl.com/ca3vdfb
   $ # Formato ASCII de los datos
-  $ python isprs2lf.py CSite4_orig.txt_orig.txt
+  $ python isprs2lf.py CSite4_orig.txt
   $ head CSite4_orig.txt
 \end{lstlisting}
 }
-\frame[containsverbatim]{%
+\begin{frame}[fragile,shrink=2]
 \frametitle {Posible formato ASCII}
 \head
 \begin{center}
@@ -176,13 +176,14 @@ v.in.lidar -tb input=CSite4_orig.txt output=stuttgartLAS
           513628.95|5403192.93|294.31
           513628.99|5403194.45|294.17
           513628.97|5403196.05|291.26
-          513629.01|5403197.58|291.24
-          513629.05|5403199.10|291.25
-          513629.09|5403200.53|291.26
-                        ...
 \end{verbatim}
+%          513629.01|5403197.58|291.24
+%          513629.05|5403199.10|291.25
+%          513629.09|5403200.53|291.26
+%                        ...
 \end{center}
-}
+\end{frame}
+%%==================================================================F 
 \defverbatim[colored]\extension{
 \begin{lstlisting}[style=shell]
 GRASS6: > # Primero conocemos la extension del archivo
@@ -229,7 +230,7 @@ v.in.ascii -tbzr in=CSite4_orig.txt out=stuttgart_last fs='|' x=4 y=5 z=6
  \vascii
  \pause
  \begin{center}
- \includegraphics[height=50mm]{images/vinascii_strips}
+ \includegraphics[height=40mm]{images/vinascii_strips}
  \end{center}
 \end{frame}
 %%==================================================================Sb

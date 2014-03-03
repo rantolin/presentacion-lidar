@@ -23,6 +23,10 @@
 %    \tableofcontents%[hidesubsections]
 %\end{frame}
 %
+%%==================================================================F PORTADA
+\begin{frame}[label=portada]
+  \titlepage
+\end{frame}%Fin del frame
 %%==================================================================S LOS DATOS
 \section{Los datos}
 %%==================================================================F 
@@ -187,7 +191,7 @@ v.in.lidar -tb input=CSite4_orig.las output=stuttgartLAS
 \defverbatim[colored]\extension{
 \begin{lstlisting}[style=shell]
 GRASS6: > # Primero conocemos la extension del archivo
-GRASS6: > r.in.xyz -sg in=CSite4_orig.txt
+GRASS6: > r.in.xyz -sg in=CSite4_orig_all.txt
 GRASS6: > # Fijo la region con la que trabajar
 GRASS6: > g.region n=5403764 s=5403188 e=513632 w=513118
 GRASS6: > # Genero una visualizacion de las pasadas
@@ -203,12 +207,12 @@ GRASS6: > r.in.xyz in=CSite4_orig.txt out=pasadas method=n fs='|'
 \defverbatim[colored]\xyz{
 \begin{lstlisting}[style=shell]
 # Generar un raster con la informacion LiDAR
-r.in.xyz in=CSite4_orig.txt out=stuttgart_first fs='|' x=1 y=2 z=3
-r.in.xyz in=CSite4_orig.txt out=stuttgart_last fs='|' x=4 y=5 z=6
+r.in.xyz in=CSite4_orig_first.txt out=stuttgart_first fs='|' x=1 y=2 z=3
+r.in.xyz in=CSite4_orig_last.txt out=stuttgart_last fs='|' x=1 y=2 z=3
 \end{lstlisting}
 }
 \begin{frame}
- \frametitle{Solape de pasadas: \LARGE\path{r.in.xyz}}
+ \frametitle{\LARGE\path{r.in.xyz}}
  \xyz
  \pause
  \begin{center}
@@ -221,8 +225,8 @@ r.in.xyz in=CSite4_orig.txt out=stuttgart_last fs='|' x=4 y=5 z=6
 \begin{lstlisting}[style=shell]
 # Generar dos vectoriales con la informacion LiDAR
 # de ultimo y primer impulso
-v.in.ascii -tbzr in=CSite4_orig.txt out=stuttgart_first fs='|' x=1 y=2 z=3
-v.in.ascii -tbzr in=CSite4_orig.txt out=stuttgart_last fs='|' x=4 y=5 z=6
+v.in.ascii -tbzr in=CSite4_orig_first.txt out=stuttgart_first fs='|' x=1 y=2 z=3
+v.in.ascii -tbzr in=CSite4_orig_last.txt out=stuttgart_last fs='|' x=1 y=2 z=3
 \end{lstlisting}
 }
 \begin{frame}
@@ -305,22 +309,29 @@ v.lidar.edgedetection in=station_last see=4 sen=4 lambda_g=0.1 \
 \vedge
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.55\textwidth]{edge}{images/edge}
+\pgfdeclareimage[width=0.5\textwidth]{edge}{images/edge}
+\defverbatim[colored]\dedge{
+\begin{lstlisting}[style=shell]
+$ d.vect station_edge size=1 cat=1 color=yellow
+$ d.vect station_edge size=1 cat=2 color=red
+\end{lstlisting}
+}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.edgedetection}}
+    \dedge
 \begin{columns}
-  \begin{column}{0.7\textwidth}
+  \begin{column}{0.65\textwidth}
     \begin{center}
 	\begin{tikzpicture}
     	  \pgftext[bottom,left,at={\pgfpointxy{0}{0}}]{\pgfuseimage{edge}}
 	\end{tikzpicture}
    \end{center}
   \end{column}
-  \begin{column}{0.25\textwidth}
-	\begin{enumerate}
-	 \item \textcolor{red}{Borde}
-	 \item \textcolor{yellow!95!black}{Terreno}
-	\end{enumerate}
+  \begin{column}{0.35\textwidth}
+    \begin{enumerate}
+      \item \textcolor{red}{Borde}
+      \item \textcolor{yellow!95!black}{Terreno}
+    \end{enumerate}
   \end{column}
 \end{columns}
 \end{frame}
@@ -350,9 +361,18 @@ v.lidar.growing in=station_edge out=station_grow \
 \vgrow
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.55\textwidth]{grow}{images/grow}
+\pgfdeclareimage[width=0.45\textwidth]{grow}{images/grow}
+\defverbatim[colored]\dgrow{
+\begin{lstlisting}[style=shell]
+$ d.vect station_grow layer=2 size=1 cat=1 color=yellow
+$ d.vect station_grow layer=2 size=1 cat=2 color=green
+$ d.vect station_grow layer=2 size=1 cat=3 color=blue
+$ d.vect station_grow layer=2 size=1 cat=4 color=red
+\end{lstlisting}
+}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.growing}}
+ \dgrow
 \begin{columns}
   \begin{column}{0.65\textwidth}
     \begin{center}
@@ -397,9 +417,18 @@ v.lidar.correction in=station_grow sce=60 scn=60 lambda_c=2 \
 \vcorr
 \end{frame}
 %%==================================================================F 
-\pgfdeclareimage[width=0.55\textwidth]{corr}{images/correction}
+\pgfdeclareimage[width=0.45\textwidth]{corr}{images/correction}
+\defverbatim[colored]\dcorr{
+\begin{lstlisting}[style=shell]
+$ d.vect station_corr layer=2 size=1 cat=1 color=yellow
+$ d.vect station_corr layer=2 size=1 cat=2 color=green
+$ d.vect station_corr layer=2 size=1 cat=3 color=blue
+$ d.vect station_corr layer=2 size=1 cat=4 color=red
+\end{lstlisting}
+}
 \begin{frame}
  \frametitle{Visualización de \LARGE\path{v.lidar.correction}}
+ \dcorr
 \begin{columns}
   \begin{column}{0.65\textwidth}
     \begin{center}
@@ -418,5 +447,7 @@ v.lidar.correction in=station_grow sce=60 scn=60 lambda_c=2 \
   \end{column}
 \end{columns}
 \end{frame}
-%%==================================================================Portada
-%\repeatframe{portada}
+%%==================================================================F FIN
+\begin{frame}
+  \titlepage
+\end{frame}

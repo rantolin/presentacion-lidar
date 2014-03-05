@@ -56,14 +56,18 @@
 
 
 %% TEMAS BASE
-\usetheme{Boadilla}
-\setbeamertemplate{headline}{
-\begin{beamercolorbox}{section in head/foot}
-\vskip2pt\insertnavigation{\paperwidth}\vskip2pt
-\end{beamercolorbox}
-\includegraphics[width=\paperwidth]{images/ucm_logo}}
+\usefonttheme{structurebold}
+\usecolortheme{orchid}
+\usetheme[hideothersubsections,left,width=.13\textwidth]{Goettingen}
 
-\usecolortheme{lily}
+% \usetheme{Boadilla}
+% \setbeamertemplate{headline}{
+%   \begin{beamercolorbox}{section in head/foot}
+%   \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+%   \end{beamercolorbox}
+%   \includegraphics[width=\paperwidth]{images/ucm_logo}
+% }
+% \usecolortheme{lily}
 
 \useinnertheme{circles}
 
@@ -73,13 +77,13 @@
 
 %% CONFIGURACIÓN GEENERAL DE HIPERVÍNCULOS
 \hypersetup{%
-    baseurl={roberto.antolin@mat.ucm.es},
-    pdftitle={Modelos digitales y filtros LiDAR},%
+    baseurl={roberto.antolin@forestry.gsi.gov.uk},
+    pdftitle={LiDAR},%
     pdfauthor={Roberto Antol\'{i}n S\'anchez},%
     pdfcreator={Roberto Antol\'{i}n S\'anchez},%
     pdfproducer=PDFLaTeX,%
-    pdfsubject={LiDAR GRASS data filtering},%
-    pdfkeywords={filtros, splines, LiDAR, GRASS}%
+    pdfsubject={LiDAR data filtering},%
+    pdfkeywords={filtros, LiDAR data, formats, repositories, workflow}%
   }
 
 \mode<presentation>{\hypersetup{pdfpagemode=FullScreen}}
@@ -171,23 +175,22 @@ commentstyle=\color{fondoO!50!green}\itshape
    }
 
 %% DATOS DEL DOCUMENTO
-\title[FOSS para trabajar con LiDAR]
-    {Filtro LiDAR. Ejemplo práctico: GRASS}
+\title[LiDAR]
+    {LiDAR}
 
 \author[R. Antolín]
     {Roberto Antolín Sánchez}
 
-\institute[UCM]{
-        Prof. Titular Interino \\
-	Sec. Dptal. Astronomía y Geodesia\\
-        Facultad de CC. Matemáticas (UCM)\\
-	Plaza de Ciencias, 3\\
-	Madrid -- 28040\\
-	\texttt{roberto.antolin@mat.ucm.es}\\
+\institute[FR]{
+  Investigador y desarrollador \\
+  Forest Research \\
+  Northern Research Station \\
+  Roslin EH25 9SY \\
+  \texttt{roberto.antolin@forestry.gsi.gov.uk}\\
 }
 
 %% FECHA DE LA PRESENTACIÓN
-\date[07-05-2013]{7 de Mayo de 2013}
+\date[15-03-2014]{15 de Marzo de 2014}
 
 \AtBeginSection[]
 {
@@ -202,5 +205,5 @@ commentstyle=\color{fondoO!50!green}\itshape
 %intro3,intro4,funciona,ventajas1,ventajas2,ventajas3
 %desventajas,miktex,miktex2,editores,otrasherr
 %\input{filtro}
-\input{filtrograss}
+\input{filtro}
 \end{document}
